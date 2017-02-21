@@ -67,13 +67,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() { //Skal laves fuldkommen om fra bunden...
-		// Drive for 2 seconds
-		/*
-		if (timer.get() < 2.0) {
-			myRobot.drive(-0.5, 0.0); // drive forwards half speed
-		} else {
-			myRobot.drive(0.0, 0.0); // stop robot
-		}*/
+		
 	}
 
 	/**
@@ -90,8 +84,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		System.out.println("Gyro heading: " + gyro.getAngle());
-		
 		//Triggeren paa joysticket styrer solenoid'en til tandhjulene
 		if(stick.getRawButton(1)) {
 			actuator.set(Value.kForward);
