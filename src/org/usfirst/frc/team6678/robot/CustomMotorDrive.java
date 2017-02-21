@@ -89,19 +89,19 @@ public class CustomMotorDrive {
 		double leftPower, rightPower;
 		leftPower = rightPower = y;
 		
-		if(y >= 0) {
+		//if(y >= 0) {
 			if(x < 0) {
-				leftPower += x;
+				leftPower += x*Math.signum(y);
 			} else if(x > 0) {
-				rightPower -= x;
+				rightPower -= x*Math.signum(y);
 			}
-		} else {
+		/*} else {
 			if(x < 0) {
 				leftPower -= x;
 			} else if(x > 0) {
 				rightPower += x;
 			}
-		}
+		}*/
 		
 		
 		driveTank(leftPower, rightPower);
