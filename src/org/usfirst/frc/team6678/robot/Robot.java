@@ -152,7 +152,7 @@ public class Robot extends IterativeRobot {
 	private boolean setupStreamingCamera(int index) {
 		UsbCameraInfo[] detectedCameras = UsbCamera.enumerateUsbCameras();
 		if(detectedCameras != null && detectedCameras.length > index) {
-			System.out.println(detectedCameras[0].path);
+			System.out.println(detectedCameras[index].path);
 			CameraServer.getInstance().startAutomaticCapture(detectedCameras[index].dev);
 			return true;
 		}
