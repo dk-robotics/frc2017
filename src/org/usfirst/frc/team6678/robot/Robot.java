@@ -27,15 +27,15 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  */
 public class Robot extends IterativeRobot {
 	//RobotDrive myRobot = new RobotDrive(0, 1);
+
+	private Joystick stick = new Joystick(0);
+	private Driving driving;
+
+	private Timer timer = new Timer();
 	
-	Joystick stick = new Joystick(0);
-	Driving driving;
-	
-	Timer timer = new Timer();
-	
-	Compressor compressor = new Compressor(0);
-	DoubleSolenoid actuator = new DoubleSolenoid(0, 1);
-	ADXRS450_Gyro gyro = new ADXRS450_Gyro();
+	private Compressor compressor = new Compressor(0);
+	private DoubleSolenoid actuator = new DoubleSolenoid(0, 1);
+	private ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -46,8 +46,9 @@ public class Robot extends IterativeRobot {
 		System.out.println("Hello, World!");
 		
 		driving = new Driving(stick);
-		
-		compressor.setClosedLoopControl(true); //Saetter kompressoren til at koere naar noedvendigt
+
+		//Saetter kompressoren til at automatisk koere naar noedvendigt
+		compressor.setClosedLoopControl(true);
 		
 		System.out.println("Setup af camera: " + setupStreamingCamera(0));
 		setupServer(4444);
