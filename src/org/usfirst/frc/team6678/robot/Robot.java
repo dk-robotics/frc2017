@@ -109,6 +109,11 @@ public class Robot extends IterativeRobot {
 		} else {
 			actuator.set(Value.kReverse);
 		}
+		
+		if(stick.getRawButton(2)) {
+			// TODO opdater til drivePolar når METODEN :) er færdig implementeret
+			driver.driveXY(0, 1);
+		}
 	}
 
 	/**
