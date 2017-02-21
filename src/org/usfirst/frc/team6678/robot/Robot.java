@@ -111,8 +111,8 @@ public class Robot extends IterativeRobot {
 		}
 		
 		if(stick.getRawButton(2)) {
-			// TODO opdater til drivePolar når METODEN :) er færdig implementeret
-			driver.driveXY(0, 1);
+			// TODO opdater til drivePolar naar METODEN :) er faerdig implementeret
+			driver.driveXY(0, sensitivity);
 		}
 	}
 
