@@ -93,7 +93,7 @@ public class Robot extends IterativeRobot {
 		//myRobot.arcadeDrive(stick);
 		double sensitivity = 1-(stick.getThrottle()+1)/2;
 		double x = stick.getX(), y = -stick.getY(), twist = stick.getTwist();
-		if(x < xThreshold*sensitivity && x > -xThreshold*sensitivity) x = 0;
+		if(x < xThreshold*sensitivity*2 && x > -xThreshold*sensitivity*2) x = 0;
 		if(y < yThreshold && y > -yThreshold) y = 0;
 		//if(twist < yThreshold && twist > -yThreshold) twist = 0;
 		
