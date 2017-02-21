@@ -27,10 +27,9 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  */
 public class Robot extends IterativeRobot {
 	//RobotDrive myRobot = new RobotDrive(0, 1);
-	CustomMotorDrive driver = new CustomMotorDrive(0, 1, 2, 3);
+	
 	Joystick stick = new Joystick(0);
-	final double yThreshold = 0.05;
-	final double xThreshold = 0.15;
+	Driving driving;
 	
 	Timer timer = new Timer();
 	
@@ -45,7 +44,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		System.out.println("Hello, World!");
 		
-		driver.invertRightMotors(true);
+		driving = new Driving(stick);
 		
 		compressor.setClosedLoopControl(true); //Saetter kompressoren til at koere naar noedvendigt
 		
@@ -96,7 +95,7 @@ public class Robot extends IterativeRobot {
 			actuator.set(Value.kReverse);
 		}
 		
-		handleDriving();
+		driving.loop();
 	}
 
 	/**
@@ -162,26 +161,5 @@ public class Robot extends IterativeRobot {
 		}
 		
 		return false;
-	}
-	
-	
-	
-	private void handleDriving() {
-		double sensitivity = 1-(stick.getThrottle()+1)/2;
-		double x = stick.getX(), y = -stick.getY(), twist = stick.getTwist();
-		if(x < xThreshold*sensitivity && x > -xThreshold*sensitivity) x = 0;
-		if(y < yThreshold && y > -yThreshold) y = 0;
-		
-		if(stick.getRawButton(2)) {
-			// TODO opdater til drivePolar naar METODEN :) er faerdig implementeret
-			driver.driveXY(0, sensitivity);
-			return;
-		}
-		
-		if(Math.abs(twist) < Math.abs(x) || Math.abs(twist) < Math.abs(y)) {
-			driver.driveXY(x*(1-0.7*sensitivity*sensitivity), y*sensitivity);
-		} else {
-			driver.tankTurn(twist*sensitivity);
-		}
 	}
 }
