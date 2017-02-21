@@ -85,24 +85,14 @@ public class CustomMotorDrive {
 	 * @param y Robottens hastighed fra -1 (bak) til 1 (fremad).
 	 */
 	public void driveXY(double x, double y) {
-		//Antager at y er positiv fremad og x er positiv i hoejre retning - det skal valideres!
 		double leftPower, rightPower;
 		leftPower = rightPower = y;
 		
-		//if(y >= 0) {
-			if(x < 0) {
-				leftPower += x*Math.signum(y);
-			} else if(x > 0) {
-				rightPower -= x*Math.signum(y);
-			}
-		/*} else {
-			if(x < 0) {
-				leftPower -= x;
-			} else if(x > 0) {
-				rightPower += x;
-			}
-		}*/
-		
+		if(x < 0) {
+			leftPower += x*Math.signum(y);
+		} else if(x > 0) {
+			rightPower -= x*Math.signum(y);
+		}
 		
 		driveTank(leftPower, rightPower);
 	}

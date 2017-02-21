@@ -164,6 +164,8 @@ public class Robot extends IterativeRobot {
 		return false;
 	}
 	
+	
+	
 	private void handleDriving() {
 		double sensitivity = 1-(stick.getThrottle()+1)/2;
 		double x = stick.getX(), y = -stick.getY(), twist = stick.getTwist();
@@ -177,7 +179,7 @@ public class Robot extends IterativeRobot {
 		}
 		
 		if(Math.abs(twist) < Math.abs(x) || Math.abs(twist) < Math.abs(y)) {
-			driver.driveXY(x*1-0.7*sensitivity*sensitivity, y*sensitivity);
+			driver.driveXY(x*(1-0.7*sensitivity*sensitivity), y*sensitivity);
 		} else {
 			driver.tankTurn(twist*sensitivity);
 		}
