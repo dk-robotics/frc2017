@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
@@ -90,19 +89,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		//myRobot.arcadeDrive(stick);
-		double sensitivity = 1-(stick.getThrottle()+1)/2;
-		double x = stick.getX(), y = -stick.getY(), twist = stick.getTwist();
-		if(x < xThreshold*sensitivity && x > -xThreshold*sensitivity) x = 0;
-		if(y < yThreshold && y > -yThreshold) y = 0;
-		//if(twist < yThreshold && twist > -yThreshold) twist = 0;
-		
-		if(Math.abs(twist) < Math.abs(x) || Math.abs(twist) < Math.abs(y)) {
-			driver.driveXY(x*sensitivity, y*sensitivity);
-		} else {
-			driver.tankTurn(twist*sensitivity);
-		}
-		
 		//Triggeren paa joysticket styrer solenoid'en til tandhjulene
 		if(stick.getRawButton(1)) {
 			actuator.set(Value.kForward);
@@ -110,10 +96,7 @@ public class Robot extends IterativeRobot {
 			actuator.set(Value.kReverse);
 		}
 		
-		if(stick.getRawButton(2)) {
-			// TODO opdater til drivePolar naar METODEN :) er faerdig implementeret
-			driver.driveXY(0, sensitivity);
-		}
+		handleDriving();
 	}
 
 	/**
@@ -141,7 +124,7 @@ public class Robot extends IterativeRobot {
 	 * 
 	 * @param port Porten som serveren aabnes for.
 	 */
-	public void setupServer(int port) {
+	private void setupServer(int port) {
 		new Thread(() -> {
 			try(
 	                ServerSocket serverSocket = new ServerSocket(port);
@@ -170,7 +153,7 @@ public class Robot extends IterativeRobot {
 	 * @param index Index'et for det kamera, der skal opsaettes.
 	 * @return True hvis opsaetningen lykkedes; ellers false.
 	 */
-	public boolean setupStreamingCamera(int index) {
+	private boolean setupStreamingCamera(int index) {
 		UsbCameraInfo[] detectedCameras = UsbCamera.enumerateUsbCameras();
 		if(detectedCameras != null && detectedCameras.length > index) {
 			System.out.println(detectedCameras[0].path);
@@ -179,5 +162,24 @@ public class Robot extends IterativeRobot {
 		}
 		
 		return false;
+	}
+	
+	private void handleDriving() {
+		double sensitivity = 1-(stick.getThrottle()+1)/2;
+		double x = stick.getX(), y = -stick.getY(), twist = stick.getTwist();
+		if(x < xThreshold*sensitivity && x > -xThreshold*sensitivity) x = 0;
+		if(y < yThreshold && y > -yThreshold) y = 0;
+		
+		if(stick.getRawButton(2)) {
+			// TODO opdater til drivePolar naar METODEN :) er faerdig implementeret
+			driver.driveXY(0, sensitivity);
+			return;
+		}
+		
+		if(Math.abs(twist) < Math.abs(x) || Math.abs(twist) < Math.abs(y)) {
+			driver.driveXY(x*1-0.7*sensitivity*sensitivity, y*sensitivity);
+		} else {
+			driver.tankTurn(twist*sensitivity);
+		}
 	}
 }
