@@ -9,6 +9,8 @@ import java.net.Socket;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.UsbCameraInfo;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -16,6 +18,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 /**
@@ -36,6 +39,7 @@ public class Robot extends IterativeRobot {
 	
 	Compressor compressor = new Compressor(0);
 	DoubleSolenoid actuator = new DoubleSolenoid(0, 1);
+	ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -82,6 +86,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
+		gyro.calibrate();
 	}
 
 	/**
@@ -89,6 +94,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		System.out.println("Gyro heading: " + gyro.getAngle());
+		
 		//Triggeren paa joysticket styrer solenoid'en til tandhjulene
 		if(stick.getRawButton(1)) {
 			actuator.set(Value.kForward);

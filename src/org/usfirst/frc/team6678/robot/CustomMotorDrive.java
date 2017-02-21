@@ -2,6 +2,7 @@ package org.usfirst.frc.team6678.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class CustomMotorDrive {
 
@@ -120,10 +121,11 @@ public class CustomMotorDrive {
 	 * 
 	 * TODO: Beskriv metoden lidt bedre, samt implementer den!
 	 * 
-	 * @param a Vinklen som robotten skal dreje med.
+	 * @param v Vinklen som robotten skal dreje med.
 	 * @param r Hastigheden som robotten skal koere.
 	 */
-	public void drivePolar(double a, double r) {
+	public void drivePolar(double v, double r) {
+		driveXY(Math.cos(v)*r, Math.sin(v)*r);
 		throw new UnsupportedOperationException("Denne metode mangler stadig at blive implementeret!");
 	}
 	

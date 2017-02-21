@@ -1,6 +1,5 @@
 package org.usfirst.frc.team6678.robot;
 
-import java.util.Dictionary;
 import java.util.HashMap;
 
 public class Sensor {
