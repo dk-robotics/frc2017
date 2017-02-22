@@ -16,7 +16,7 @@ public class Driving {
 	Driving(Joystick s){
 		driver.invertRightMotors(true);
 		stick = s;
-		gyro.calibrate(); //Dette tager maaske en evighed og delay'er opstarten af koden? 
+		gyro.calibrate(); //Dette tager maaske en 'evighed' og delay'er opstarten af koden?
 	}
 	
 	/**
@@ -36,6 +36,33 @@ public class Driving {
 			// TODO opdater til drivePolar naar METODEN :) er faerdig implementeret
 			driver.driveXY(-gyro.getAngle()/45, sensitivity); //Tilfaeldig koefficient der virker :D
 			return;
+		} else {
+			calibrated = false;
+		}
+		
+		//Drej hhv 90 grader mod uret, 90 grader med uret og 180 grader ved tryk på en knap:
+		//Maaske skal prioriteterne byttes om, men foerst skal det bare tjekkes om det virker...
+		if(stick.getRawButton(2)) { //Er det den rigtige knap?
+			if(!calibrated) {
+				calibrated = true;
+				gyro.reset();
+			}
+			if(gyro.getAngle() > -90) //Er den den rigtige vej?
+				driver.tankTurn(-1);
+		} else if(stick.getRawButton(4)) { //Er det den rigtige knap?
+			if(!calibrated) {
+				calibrated = true;
+				gyro.reset();
+			}
+			if(gyro.getAngle() < 90) //Er den den rigtige vej?
+				driver.tankTurn(1);
+		} else if(stick.getRawButton(3)) { //Er det den rigtige knap?
+			if(!calibrated) {
+				calibrated = true;
+				gyro.reset();
+			}
+			if(gyro.getAngle() < 180) //Er den den rigtige vej?
+				driver.tankTurn(1);
 		} else {
 			calibrated = false;
 		}
