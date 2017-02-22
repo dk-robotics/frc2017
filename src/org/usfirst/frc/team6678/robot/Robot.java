@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import org.usfirst.frc.team6678.robot.autonomous.AutonomousHandler;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -26,11 +27,12 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  */
 public class Robot extends IterativeRobot {
 	//RobotDrive myRobot = new RobotDrive(0, 1);
-
+	
+	private Timer timer = new Timer();
 	private Joystick stick = new Joystick(0);
 	private Driving driving = new Driving(stick);
+	private AutonomousHandler autonomous = new AutonomousHandler(timer, driving.driver);
 
-	private Timer timer = new Timer();
 	
 	private Compressor compressor = new Compressor(0);
 	private DoubleSolenoid actuator = new DoubleSolenoid(0, 1);
@@ -58,6 +60,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		timer.reset();
 		timer.start();
+		autonomous.init();
 	}
 
 	/**
@@ -65,7 +68,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() { //Skal laves fuldkommen om fra bunden...
-		
+		autonomous.loop();
 	}
 
 	/**
@@ -89,7 +92,8 @@ public class Robot extends IterativeRobot {
 			actuator.set(Value.kReverse);
 		}
 		
-		driving.loop();
+		if(!stick.getRawButton(12))
+			driving.loop();
 	}
 
 	/**
