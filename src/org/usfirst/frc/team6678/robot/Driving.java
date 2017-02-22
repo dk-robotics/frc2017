@@ -47,22 +47,22 @@ public class Driving {
 		//Maaske skal prioriteterne byttes om, men foerst skal det bare tjekkes om det virker...
 		if(stick.getRawButton(3)) {
 			if(turn != null) {
-				turn = new Turn(-90);
+				turn = new Turn(-90, gyro, driver);
 				turn.start();
 			}
 		} else if(stick.getRawButton(4)) {
 			if(turn != null) {
-				turn = new Turn(90);
+				turn = new Turn(90, gyro, driver);
 				turn.start();
 			}
 		} else if(stick.getRawButton(5)) {
 			if(turn != null) {
-				turn = new Turn(-180);
+				turn = new Turn(-180, gyro, driver);
 				turn.start();
 			}
 		} else if(stick.getRawButton(6)) {
 			if(turn != null) {
-				turn = new Turn(180);
+				turn = new Turn(180, gyro, driver);
 				turn.start();
 			}
 		}

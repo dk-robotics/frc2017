@@ -45,7 +45,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		System.out.println("Hello, World!");
 		driving = new Driving(stick);
-		autonomous = new AutonomousHandler(timer);
+		autonomous = new AutonomousHandler(timer, driving.driver);
 
 		//Saetter kompressoren til at automatisk koere naar noedvendigt
 		compressor.setClosedLoopControl(true);
