@@ -27,12 +27,12 @@ import org.usfirst.frc.team6678.robot.autonomous.AutonomousHandler;
  */
 public class Robot extends IterativeRobot {
 	//RobotDrive myRobot = new RobotDrive(0, 1);
-
-	private Joystick stick = new Joystick(0);
-	private AutonomousHandler autonomous;
-	private Driving driving = new Driving(stick);
-
+	
 	private Timer timer = new Timer();
+	private Joystick stick = new Joystick(0);
+	private Driving driving = new Driving(stick);
+	private AutonomousHandler autonomous = new AutonomousHandler(timer, driving.driver);
+
 	
 	private Compressor compressor = new Compressor(0);
 	private DoubleSolenoid actuator = new DoubleSolenoid(0, 1);
@@ -44,8 +44,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		System.out.println("Hello, World!");
-		driving = new Driving(stick);
-		autonomous = new AutonomousHandler(timer, driving.driver);
 
 		//Saetter kompressoren til at automatisk koere naar noedvendigt
 		compressor.setClosedLoopControl(true);
