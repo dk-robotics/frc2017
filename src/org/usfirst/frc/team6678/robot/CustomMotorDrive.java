@@ -118,14 +118,20 @@ public class CustomMotorDrive {
 	 * polaere koordinater som input - altsaa en vinkel og en radius/laengde,
 	 * hvor sidstnaevnte oversaettes til hastigheden.
 	 * 
-	 * TODO: Beskriv metoden lidt bedre, samt implementer den!
+	 * Denne metode kalder internt {@link #driveXY(Joystick)}, hvor de polare
+	 * koordinater oversættes til 'normale' kartesiske koordinater, via
+	 * {@code driveXY(Math.cos(v)*r, Math.sin(v)*r);}.
 	 * 
-	 * @param v Vinklen som robotten skal dreje med.
-	 * @param r Hastigheden som robotten skal koere.
+	 * Dermed er der reelt ikke den store forskel på denne metode
+	 * og {@link #driveXY(Joystick)}, men denne metode er lidt langsommere,
+	 * da den benytter trigonometrisk funktioner, ud over at kalde endnu en metode.
+	 * 
+	 * @param v Vinklen som robotten skal dreje med i radianer!
+	 * @param r Hastigheden som robotten skal koere med, fra -1 til 1 (selvom det
+	 * giver mest mening mellem 0 og 1).
 	 */
 	public void drivePolar(double v, double r) {
 		driveXY(Math.cos(v)*r, Math.sin(v)*r);
-		throw new UnsupportedOperationException("Denne metode mangler stadig at blive implementeret!");
 	}
 	
 	/**

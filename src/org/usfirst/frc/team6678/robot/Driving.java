@@ -47,21 +47,21 @@ public class Driving {
 				calibrated = true;
 				gyro.reset();
 			}
-			if(gyro.getAngle() > -90) //Er den den rigtige vej?
+			if(gyro.getAngle() > -90) //Er det den rigtige vej?
 				driver.tankTurn(-1);
 		} else if(stick.getRawButton(4)) { //Er det den rigtige knap?
 			if(!calibrated) {
 				calibrated = true;
 				gyro.reset();
 			}
-			if(gyro.getAngle() < 90) //Er den den rigtige vej?
+			if(gyro.getAngle() < 90) //Er det den rigtige vej?
 				driver.tankTurn(1);
 		} else if(stick.getRawButton(3)) { //Er det den rigtige knap?
 			if(!calibrated) {
 				calibrated = true;
 				gyro.reset();
 			}
-			if(gyro.getAngle() < 180) //Er den den rigtige vej?
+			if(gyro.getAngle() < 180) //Er det den rigtige vej?
 				driver.tankTurn(1);
 		} else {
 			calibrated = false;
