@@ -75,34 +75,7 @@ public class Driving {
 			turn.stop();
 			turn = null;
 		}
-		
-		//Gammel kode der skal fjernes... Holdes lige nu til reference
-		/*if(stick.getRawButton(3)) { //Er det den rigtige knap?
-			if(!calibrated) {
-				calibrated = true;
-				gyro.reset();
-			}
-			if(gyro.getAngle() > -90) //Er det den rigtige vej?
-				driver.tankTurn(-1);
-		} else if(stick.getRawButton(4)) { //Er det den rigtige knap?
-			if(!calibrated) {
-				calibrated = true;
-				gyro.reset();
-			}
-			if(gyro.getAngle() < 90) //Er det den rigtige vej?
-				driver.tankTurn(1);
-		} else if(stick.getRawButton(6)) { //Er det den rigtige knap?
-			if(!calibrated) {
-				calibrated = true;
-				gyro.reset();
-			}
-			if(gyro.getAngle() < 180) //Er det den rigtige vej?
-				driver.tankTurn(1);
-		} else {
-			calibrated = false;
-		}*/
-		
-		
+
 		if(Math.abs(twist) < Math.abs(x) || Math.abs(twist) < Math.abs(y)) {
 			//x*(1-0.75*sensitivity*sensitivity) //Den gamle version
 			double xScalingCoefficient = 1-0.75*sensitivity*x*sensitivity*x; //1-0.75*(x*sensitivity)^2)
