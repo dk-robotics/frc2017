@@ -8,7 +8,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.UsbCameraInfo;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -29,14 +28,13 @@ public class Robot extends IterativeRobot {
 	//RobotDrive myRobot = new RobotDrive(0, 1);
 
 	private Joystick stick = new Joystick(0);
-	private Driving driving;
 	private Autonomous autonomous;
+	private Driving driving = new Driving(stick);
 
 	private Timer timer = new Timer();
 	
 	private Compressor compressor = new Compressor(0);
 	private DoubleSolenoid actuator = new DoubleSolenoid(0, 1);
-	private ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -45,14 +43,14 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		System.out.println("Hello, World!");
-		
 		driving = new Driving(stick);
 		autonomous = new Autonomous(timer);
 
 		//Saetter kompressoren til at automatisk koere naar noedvendigt
 		compressor.setClosedLoopControl(true);
-		
-		System.out.println("Setup af camera: " + setupStreamingCamera(0));
+
+		for(int i = 0; i < 10; i++)
+			setupStreamingCamera(i);
 		setupServer(4444);
 	}
 
@@ -80,7 +78,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
-		gyro.calibrate();
+		
 	}
 
 	/**

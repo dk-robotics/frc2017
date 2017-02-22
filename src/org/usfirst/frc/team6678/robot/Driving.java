@@ -11,12 +11,12 @@ public class Driving {
 	
 	final double yThreshold = 0.05;
 	final double xThreshold = 0.15;
-	boolean firstPush = true;
+	boolean calibrated = false;
 	
 	Driving(Joystick s){
 		driver.invertRightMotors(true);
 		stick = s;
-		gyro.calibrate();
+		gyro.calibrate(); //Dette tager maaske en 'evighed' og delay'er opstarten af koden?
 	}
 	
 	/**
@@ -29,19 +29,48 @@ public class Driving {
 		if(y < yThreshold && y > -yThreshold) y = 0;
 		
 		if(stick.getRawButton(2)) {
-			if(firstPush) {
-				firstPush = false;
+			if(!calibrated) {
+				calibrated = true;
 				gyro.reset();
 			}
 			// TODO opdater til drivePolar naar METODEN :) er faerdig implementeret
-			driver.driveXY(-gyro.getAngle()/45, sensitivity);
+			driver.driveXY(-gyro.getAngle()/45, sensitivity); //Tilfaeldig koefficient der virker :D
 			return;
 		} else {
-			firstPush = true;
+			calibrated = false;
+		}
+		
+		//Drej hhv 90 grader mod uret, 90 grader med uret og 180 grader ved tryk på en knap:
+		//Maaske skal prioriteterne byttes om, men foerst skal det bare tjekkes om det virker...
+		if(stick.getRawButton(2)) { //Er det den rigtige knap?
+			if(!calibrated) {
+				calibrated = true;
+				gyro.reset();
+			}
+			if(gyro.getAngle() > -90) //Er det den rigtige vej?
+				driver.tankTurn(-1);
+		} else if(stick.getRawButton(4)) { //Er det den rigtige knap?
+			if(!calibrated) {
+				calibrated = true;
+				gyro.reset();
+			}
+			if(gyro.getAngle() < 90) //Er det den rigtige vej?
+				driver.tankTurn(1);
+		} else if(stick.getRawButton(3)) { //Er det den rigtige knap?
+			if(!calibrated) {
+				calibrated = true;
+				gyro.reset();
+			}
+			if(gyro.getAngle() < 180) //Er det den rigtige vej?
+				driver.tankTurn(1);
+		} else {
+			calibrated = false;
 		}
 		
 		if(Math.abs(twist) < Math.abs(x) || Math.abs(twist) < Math.abs(y)) {
-			driver.driveXY(x*(1-0.7*sensitivity*sensitivity), y*sensitivity);
+			//x*(1-0.75*sensitivity*sensitivity) //Den gamle version
+			double xScalingCoefficient = 1-0.75*sensitivity*x*sensitivity*x; //1-0.75*(x*sensitivity)^2)
+			driver.driveXY(x*sensitivity*xScalingCoefficient, y*sensitivity); //Ny scaling factor, der skal testes
 		} else {
 			driver.tankTurn(twist*sensitivity);
 		}
