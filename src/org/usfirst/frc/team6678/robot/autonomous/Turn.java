@@ -4,8 +4,8 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import org.usfirst.frc.team6678.robot.CustomMotorDrive;
 
 /**
- * Staar for at dreje robotten autonomt
- * Created by viktorstrate on 2/22/17.
+ * Denne klasse drejer robotten 'autonomt' et vist antal grader.
+ * Præcisionen er dog relativt dårlig.
  */
 public class Turn implements Autonomous {
 
@@ -16,7 +16,7 @@ public class Turn implements Autonomous {
 
     /**
      *
-     * @param degrees Grader som robotten skal dreje, positivt drejer til hÃ¸jre
+     * @param degrees Grader som robotten skal dreje, positivt drejer til hoejre
      */
     public Turn(double degrees, ADXRS450_Gyro gyro, CustomMotorDrive customMotorDrive) {
         this.degreesToTurn = degrees;
@@ -47,7 +47,9 @@ public class Turn implements Autonomous {
         if(Math.abs(gyro.getAngle()) > Math.abs(degreesToTurn)){
             stop();
         } else {
-            customMotorDrive.tankTurn(Math.signum(degreesToTurn));
+        	//Implementer en slope mekanisme, eller lev med at den drejer langsomt... (derfor delt med 3)
+            customMotorDrive.tankTurn(Math.signum(degreesToTurn)/3);
+            System.out.println("From the Turn loop...");
         }
     }
 }
