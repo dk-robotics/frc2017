@@ -11,7 +11,7 @@ public class Driving {
 	
 	final double yThreshold = 0.05;
 	final double xThreshold = 0.15;
-	boolean firstPush = true;
+	boolean calibrated = false;
 	
 	Driving(Joystick s){
 		driver.invertRightMotors(true);
@@ -29,19 +29,19 @@ public class Driving {
 		if(y < yThreshold && y > -yThreshold) y = 0;
 		
 		if(stick.getRawButton(2)) {
-			if(firstPush) {
-				firstPush = false;
+			if(!calibrated) {
+				calibrated = true;
 				gyro.reset();
 			}
 			// TODO opdater til drivePolar naar METODEN :) er faerdig implementeret
 			driver.driveXY(-gyro.getAngle()/45, sensitivity);
 			return;
 		} else {
-			firstPush = true;
+			calibrated = false;
 		}
 		
 		if(Math.abs(twist) < Math.abs(x) || Math.abs(twist) < Math.abs(y)) {
-			driver.driveXY(x*(1-0.7*sensitivity*sensitivity), y*sensitivity);
+			driver.driveXY(x*(1-0.75*sensitivity*sensitivity), y*sensitivity);
 		} else {
 			driver.tankTurn(twist*sensitivity);
 		}
