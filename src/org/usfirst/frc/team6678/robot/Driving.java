@@ -42,7 +42,7 @@ public class Driving {
 		
 		//Drej hhv 90 grader mod uret, 90 grader med uret og 180 grader ved tryk på en knap:
 		//Maaske skal prioriteterne byttes om, men foerst skal det bare tjekkes om det virker...
-		if(stick.getRawButton(2)) { //Er det den rigtige knap?
+		if(stick.getRawButton(3)) { //Er det den rigtige knap?
 			if(!calibrated) {
 				calibrated = true;
 				gyro.reset();
