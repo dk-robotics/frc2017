@@ -12,7 +12,14 @@ public class CustomMotorDrive {
 	
 	private Talon leftMotor0, leftMotor1, rightMotor0, rightMotor1;
 	private boolean invertRightMotors = false, invertLeftMotors = false;
-	
+
+	// Acceleration for left and right motor
+	private double accelerationLeft = 0;
+	private double accelerationRight = 0;
+	private double lastAccelerationTimestamp = 0;
+	private double accelerationDrag = 10; // The lower a value the more drag on the robot, when accelerating
+    private double accelerationDamp = 2;  // The lower a value the more damping on the robot, when decelerating
+
 	/**
 	 * Instantierer klassen med referencer til de fire PWM-porte, som de fire motorer,
 	 * der skal kontrolleres og styres fra denne klasse, er kablet til.
@@ -66,6 +73,11 @@ public class CustomMotorDrive {
 		else if(leftMotorPower < -1) leftMotorPower = -1;
 		if(rightMotorPower > 1) rightMotorPower = 1;
 		else if(rightMotorPower < -1) rightMotorPower = -1;
+
+		updateAcceleration(leftMotorPower, rightMotorPower);
+
+		leftMotorPower *= accelerationLeft;
+		rightMotorPower *= accelerationRight;
 		
 		leftMotor0.set((invertLeftMotors ? -leftMotorPower : leftMotorPower));
 		leftMotor1.set((invertLeftMotors ? -leftMotorPower : leftMotorPower));
@@ -162,5 +174,26 @@ public class CustomMotorDrive {
 	public void tankTurn(double speed) {
 		driveTank(speed, -speed);
 	}
+
+    /**
+     * Updates the acceleration variables according to the motor speeds
+     * @param leftSpeed The speed for the left motor, value from -1 to 1
+     * @param rightSpeed The speed for the right motor, value from -1 to 1
+     */
+	private void updateAcceleration(double leftSpeed, double rightSpeed) {
+
+	    double accelerationDecrease = (System.currentTimeMillis() - lastAccelerationTimestamp) / accelerationDamp;
+	    lastAccelerationTimestamp = System.currentTimeMillis();
+
+	    accelerationLeft -= accelerationDecrease;
+	    accelerationRight -= accelerationDecrease;
+
+	    if(accelerationLeft < 0) accelerationLeft = 0;
+	    if(accelerationRight < 0) accelerationRight = 0;
+
+	    // Gange 1000 for at matche accelerationDecrease, som er i millisekunder
+	    accelerationLeft += leftSpeed * 1000 / accelerationDrag;
+	    accelerationRight += rightSpeed * 1000 / accelerationDrag;
+    }
 	
 }
