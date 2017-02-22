@@ -1,7 +1,8 @@
-package org.usfirst.frc.team6678.robot;
+package org.usfirst.frc.team6678.robot.autonomous;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Timer;
+import org.usfirst.frc.team6678.robot.Robot;
 
 /**
  * Klassen indeholder materiale for at haandtere autonom styring
@@ -9,12 +10,12 @@ import edu.wpi.first.wpilibj.Timer;
  */
 
 // TODO finish class
-public class Autonomous {
+public class AutonomousHandler {
     private Timer timer;
 
     private ADXRS450_Gyro gyro;
 
-    public Autonomous(Timer timer) {
+    public AutonomousHandler(Timer timer) {
         this.timer = timer;
         gyro = new ADXRS450_Gyro();
     }

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import org.usfirst.frc.team6678.robot.autonomous.AutonomousHandler;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -28,7 +29,7 @@ public class Robot extends IterativeRobot {
 	//RobotDrive myRobot = new RobotDrive(0, 1);
 
 	private Joystick stick = new Joystick(0);
-	private Autonomous autonomous;
+	private AutonomousHandler autonomous;
 	private Driving driving = new Driving(stick);
 
 	private Timer timer = new Timer();
@@ -44,7 +45,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		System.out.println("Hello, World!");
 		driving = new Driving(stick);
-		autonomous = new Autonomous(timer);
+		autonomous = new AutonomousHandler(timer);
 
 		//Saetter kompressoren til at automatisk koere naar noedvendigt
 		compressor.setClosedLoopControl(true);
