@@ -1,5 +1,7 @@
 package org.usfirst.frc.team6678.robot;
 
+import org.usfirst.frc.team6678.robot.autonomous.Turn;
+
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -8,6 +10,7 @@ public class Driving {
 	CustomMotorDrive driver = new CustomMotorDrive(0, 1, 2, 3);
 	ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 	private Joystick stick;
+	Turn turn;
 	
 	final double yThreshold = 0.05;
 	final double xThreshold = 0.15;
@@ -42,7 +45,37 @@ public class Driving {
 		
 		//Drej hhv 90 grader mod uret, 90 grader med uret og 180 grader ved tryk på en knap:
 		//Maaske skal prioriteterne byttes om, men foerst skal det bare tjekkes om det virker...
-		if(stick.getRawButton(3)) { //Er det den rigtige knap?
+		if(stick.getRawButton(3)) {
+			if(turn != null) {
+				turn = new Turn(-90);
+				turn.start();
+			}
+		} else if(stick.getRawButton(4)) {
+			if(turn != null) {
+				turn = new Turn(90);
+				turn.start();
+			}
+		} else if(stick.getRawButton(5)) {
+			if(turn != null) {
+				turn = new Turn(-180);
+				turn.start();
+			}
+		} else if(stick.getRawButton(6)) {
+			if(turn != null) {
+				turn = new Turn(180);
+				turn.start();
+			}
+		}
+		if(turn != null && !turn.isRunning())
+			turn = null;
+		
+		if(stick.getRawButton(12)) { //Annuller Turn!
+			turn.stop();
+			turn = null;
+		}
+		
+		//Gammel kode der skal fjernes... Holdes lige nu til reference
+		/*if(stick.getRawButton(3)) { //Er det den rigtige knap?
 			if(!calibrated) {
 				calibrated = true;
 				gyro.reset();
@@ -56,7 +89,7 @@ public class Driving {
 			}
 			if(gyro.getAngle() < 90) //Er det den rigtige vej?
 				driver.tankTurn(1);
-		} else if(stick.getRawButton(3)) { //Er det den rigtige knap?
+		} else if(stick.getRawButton(6)) { //Er det den rigtige knap?
 			if(!calibrated) {
 				calibrated = true;
 				gyro.reset();
@@ -65,7 +98,7 @@ public class Driving {
 				driver.tankTurn(1);
 		} else {
 			calibrated = false;
-		}
+		}*/
 		
 		if(Math.abs(twist) < Math.abs(x) || Math.abs(twist) < Math.abs(y)) {
 			//x*(1-0.75*sensitivity*sensitivity) //Den gamle version

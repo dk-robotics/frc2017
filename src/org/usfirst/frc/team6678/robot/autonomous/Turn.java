@@ -24,8 +24,8 @@ public class Turn implements Autonomous {
     }
 
     @Override
-    public void isRunning() {
-
+    public boolean isRunning() {
+    	return running;
     }
 
     @Override
