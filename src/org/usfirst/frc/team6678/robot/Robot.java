@@ -45,8 +45,8 @@ public class Robot extends IterativeRobot {
 
 		//Saetter kompressoren til at automatisk koere naar noedvendigt
 		compressor.setClosedLoopControl(true);
-		
-		System.out.println("Setup af camera: " + setupStreamingCamera(0));
+
+		setupStreamingCamera(0);
 		setupServer(4444);
 	}
 
