@@ -94,7 +94,8 @@ public class Robot extends IterativeRobot {
 			actuator.set(Value.kReverse);
 		}
 		
-		driving.loop();
+		if(!stick.getRawButton(12))
+			driving.loop();
 	}
 
 	/**

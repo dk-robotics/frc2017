@@ -77,6 +77,7 @@ public class Driving {
 				runningAutonomous.start();
 			}
 		}
+
 		if(runningAutonomous != null && !runningAutonomous.isRunning())
 			runningAutonomous = null;
 
