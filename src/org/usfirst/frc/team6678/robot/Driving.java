@@ -41,7 +41,8 @@ public class Driving {
 		}
 		
 		if(Math.abs(twist) < Math.abs(x) || Math.abs(twist) < Math.abs(y)) {
-			driver.driveXY(x*(1-0.75*sensitivity*sensitivity), y*sensitivity);
+			//x*(1-0.75*sensitivity*sensitivity)
+			driver.driveXY(1-0.75*sensitivity*x*sensitivity*x, y*sensitivity); //Ny scaling factor, der skal testes
 		} else {
 			driver.tankTurn(twist*sensitivity);
 		}
