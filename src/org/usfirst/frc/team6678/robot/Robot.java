@@ -30,6 +30,7 @@ public class Robot extends IterativeRobot {
 
 	private Joystick stick = new Joystick(0);
 	private Driving driving;
+	private Autonomous autonomous;
 
 	private Timer timer = new Timer();
 	
@@ -46,6 +47,7 @@ public class Robot extends IterativeRobot {
 		System.out.println("Hello, World!");
 		
 		driving = new Driving(stick);
+		autonomous = new Autonomous(timer);
 
 		//Saetter kompressoren til at automatisk koere naar noedvendigt
 		compressor.setClosedLoopControl(true);
@@ -61,6 +63,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		timer.reset();
 		timer.start();
+		autonomous.init();
 	}
 
 	/**
@@ -68,7 +71,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() { //Skal laves fuldkommen om fra bunden...
-		
+		autonomous.loop();
 	}
 
 	/**
