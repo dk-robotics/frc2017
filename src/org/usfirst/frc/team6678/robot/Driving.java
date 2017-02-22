@@ -34,7 +34,7 @@ public class Driving {
 				gyro.reset();
 			}
 			// TODO opdater til drivePolar naar METODEN :) er faerdig implementeret
-			driver.driveXY(-gyro.getAngle()/45, sensitivity);
+			driver.driveXY(-gyro.getAngle()/45, sensitivity); //Tilfaeldig koefficient der virker :D
 			return;
 		} else {
 			calibrated = false;
