@@ -26,6 +26,8 @@ public class Driving {
 	 * Bliver kaldt fra {@link Robot#teleopPeriodic()}
 	 */
 	public void loop () {
+		
+		
 		double sensitivity = 1-(stick.getThrottle()+1)/2;
 		double x = stick.getX(), y = -stick.getY(), twist = stick.getTwist();
 		if(x < xThreshold*sensitivity && x > -xThreshold*sensitivity) x = 0;
@@ -99,6 +101,7 @@ public class Driving {
 		} else {
 			calibrated = false;
 		}*/
+		
 		
 		if(Math.abs(twist) < Math.abs(x) || Math.abs(twist) < Math.abs(y)) {
 			//x*(1-0.75*sensitivity*sensitivity) //Den gamle version
