@@ -8,7 +8,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.UsbCameraInfo;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -35,7 +34,6 @@ public class Robot extends IterativeRobot {
 	
 	private Compressor compressor = new Compressor(0);
 	private DoubleSolenoid actuator = new DoubleSolenoid(0, 1);
-	private ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -77,7 +75,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
-		gyro.calibrate();
+		
 	}
 
 	/**
