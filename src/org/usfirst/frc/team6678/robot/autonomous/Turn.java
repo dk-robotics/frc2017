@@ -27,6 +27,7 @@ public class Turn implements Autonomous {
     @Override
     public void start() {
         gyro.reset();
+        running = true;
     }
 
     @Override
@@ -41,6 +42,8 @@ public class Turn implements Autonomous {
 
     @Override
     public void loop() {
+        if(!running) return;
+
         if(Math.abs(gyro.getAngle()) > Math.abs(degreesToTurn)){
             stop();
         } else {
