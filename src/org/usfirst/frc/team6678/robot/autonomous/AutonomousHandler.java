@@ -20,14 +20,14 @@ public class AutonomousHandler {
     public AutonomousHandler(Timer timer, CustomMotorDrive customMotorDrive) {
         this.timer = timer;
         this.customMotorDrive = customMotorDrive;
-        gyro = new ADXRS450_Gyro();
+        //gyro = new ADXRS450_Gyro();
     }
 
     /**
      * Kaldt af {@link Robot#autonomousInit()}
      */
     public void init() {
-        gyro.reset();
+        //gyro.reset();
     }
 
     /**
