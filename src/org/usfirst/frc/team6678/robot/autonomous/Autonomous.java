@@ -20,7 +20,7 @@ public interface Autonomous {
     /**
      * Sand hvis funktion er i gang
      */
-    void isRunning();
+    boolean isRunning();
 
     /**
      * Skal kaldes af {@link Robot#autonomousPeriodic()}
