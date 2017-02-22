@@ -16,7 +16,7 @@ public class Driving {
 	Driving(Joystick s){
 		driver.invertRightMotors(true);
 		stick = s;
-		gyro.calibrate();
+		gyro.calibrate(); //Dette tager maaske en evighed og delay'er opstarten af koden? 
 	}
 	
 	/**

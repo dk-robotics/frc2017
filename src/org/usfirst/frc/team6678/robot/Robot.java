@@ -28,7 +28,7 @@ public class Robot extends IterativeRobot {
 	//RobotDrive myRobot = new RobotDrive(0, 1);
 
 	private Joystick stick = new Joystick(0);
-	private Driving driving;
+	private Driving driving = new Driving(stick);
 
 	private Timer timer = new Timer();
 	
@@ -42,8 +42,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		System.out.println("Hello, World!");
-		
-		driving = new Driving(stick);
 
 		//Saetter kompressoren til at automatisk koere naar noedvendigt
 		compressor.setClosedLoopControl(true);
