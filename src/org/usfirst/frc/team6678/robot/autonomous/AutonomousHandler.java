@@ -3,6 +3,7 @@ package org.usfirst.frc.team6678.robot.autonomous;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Timer;
 import org.usfirst.frc.team6678.robot.CustomMotorDrive;
+import org.usfirst.frc.team6678.robot.Log;
 import org.usfirst.frc.team6678.robot.Robot;
 
 /**
@@ -18,6 +19,7 @@ public class AutonomousHandler {
     private ADXRS450_Gyro gyro;
 
     public AutonomousHandler(Timer timer, CustomMotorDrive customMotorDrive) {
+        Log.message("AutoHandler", "Constructor initializing");
         this.timer = timer;
         this.customMotorDrive = customMotorDrive;
         //gyro = new ADXRS450_Gyro();

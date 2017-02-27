@@ -20,11 +20,13 @@ public class Driving {
 	boolean calibrated = false, invertedControls = false;
 	
 	Driving(Joystick s){
+		Log.message("Driving", "Initializing");
 		driver.invertRightMotors(true);
 		stick = s;
 		invertSwitchButton = new ButtonSwitchState(stick, 8);
 		gyro.calibrate(); //Dette tager maaske en 'evighed' og delay'er opstarten af koden?
-	}
+        Log.info("Driving", "Initializing finished");
+    }
 	
 	/**
 	 * Bliver kaldt fra {@link Robot#teleopPeriodic()}
@@ -32,6 +34,7 @@ public class Driving {
 	public void loop () {
 
         if(stick.getRawButton(12)) { //Annuller Turn!
+            Log.info("Driving", "Annullere autonomous turn");
             runningAutonomous.stop();
             runningAutonomous = null;
         }
@@ -45,6 +48,8 @@ public class Driving {
 				twist = stick.getTwist();//*(invertedControls ? -1 : 1);
 		if(x < xThreshold*sensitivity && x > -xThreshold*sensitivity) x = 0;
 		if(y < yThreshold && y > -yThreshold) y = 0;
+
+		Log.debug("Driving", String.format("Loop x: %s y: %s", x, y));
 		
 		if(stick.getRawButton(2)) {
 			if(!calibrated) {
@@ -61,9 +66,9 @@ public class Driving {
 		//Drej hhv 90 grader mod uret, 90 grader med uret og 180 grader ved tryk paa en knap:
 		//Maaske skal prioriteterne byttes om, men foerst skal det bare tjekkes om det virker...
 		if(stick.getRawButton(3)) {
+		    Log.debug("Driving", "Starting autonomous turn");
 			if(runningAutonomous == null) {
 				runningAutonomous = new Turn(-90, gyro, driver);
-				System.out.println("Turing 90 degrees left...");
 				runningAutonomous.start();
 			}
 		} else if(stick.getRawButton(4)) {
@@ -92,11 +97,13 @@ public class Driving {
 			runningAutonomous = null;
 
 		if(Math.abs(twist) < Math.abs(x)*2 || Math.abs(twist) < Math.abs(y)*1.5) {
+		    Log.debug("Driving", "Driving using driveXY");
 			//x*(1-0.75*sensitivity*sensitivity) //Den gamle version
 			double xScalingCoefficient = 1-0.75*sensitivity*x*sensitivity*x; //1-0.75*(x*sensitivity)^2)
 			double offset = xThreshold*sensitivity*Math.signum(x);
 			driver.driveXY(x*sensitivity*xScalingCoefficient-offset, y*sensitivity);
 		} else {
+		    Log.debug("Driving", "Driving using tankTurn");
 			driver.tankTurn(twist*sensitivity);
 		}
 	}

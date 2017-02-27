@@ -82,6 +82,7 @@ public class CustomMotorDrive {
 	 * fra 1 (fuld fart fremad) til -1 (fuld fart bagud).
 	 */
 	public void driveTank(double leftMotorPower, double rightMotorPower) {
+	    Log.info("CustomMotorDrive", "Drive tank, inputs left: "+leftMotorPower+" right: "+rightMotorPower);
 		if(leftMotorPower > 1) leftMotorPower = 1;
 		else if(leftMotorPower < -1) leftMotorPower = -1;
 		if(rightMotorPower > 1) rightMotorPower = 1;
@@ -107,6 +108,7 @@ public class CustomMotorDrive {
 	 * @param y Robottens hastighed fra -1 (bak) til 1 (fremad).
 	 */
 	public void driveXY(double x, double y) {
+	    Log.debug("CustomMotorDrive", String.format("driveXY, x: %s y: %s", x, y));
 		double leftPower, rightPower;
 		leftPower = rightPower = y;
 		
@@ -195,6 +197,8 @@ public class CustomMotorDrive {
         lastAccelerationTimestamp = System.currentTimeMillis();
         acceleratedLeftMotor += acceleration * (leftSpeed - acceleratedLeftMotor) * timeDelta;
         acceleratedRightMotor += acceleration * (rightSpeed - acceleratedRightMotor) * timeDelta;
+        Log.info("CustomMotorDrive", String.format("Updated acceleration, accelerated values - left: %s right: %s",
+                acceleratedLeftMotor, acceleratedRightMotor));
     }
 	
 }
