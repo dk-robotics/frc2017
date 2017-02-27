@@ -179,8 +179,8 @@ public class CustomMotorDrive {
 	private void updateAcceleration(double leftSpeed, double rightSpeed) {
         double timeDelta = (System.currentTimeMillis() - lastAccelerationTimestamp) / 20;
         lastAccelerationTimestamp = System.currentTimeMillis();
-        acceleratedLeftMotor = acceleratedLeftMotor + acceleration * (leftSpeed - acceleratedLeftMotor) * timeDelta;
-        acceleratedRightMotor = acceleratedRightMotor + acceleration * (rightSpeed - acceleratedRightMotor) * timeDelta;
+        acceleratedLeftMotor += Math.pow(acceleration * (leftSpeed - acceleratedLeftMotor) * timeDelta, 0.5);
+        acceleratedRightMotor += Math.pow(acceleration * (rightSpeed - acceleratedRightMotor) * timeDelta, 0.5);
 
         if(acceleratedLeftMotor > 0.95) acceleratedLeftMotor = 1;
         if(acceleratedRightMotor > 0.95) acceleratedRightMotor = 1;
