@@ -20,40 +20,29 @@ public class Log {
         }
     }
 
-	Type loggingLevel = Type.ERROR;
-    
-    public void setLoggingLevel(Type level) {
-    	loggingLevel = level;
-    }
-
-    private static void log(Type type, String msg){
+    private static void log(Type type, String tag, String msg){
         if(type.isEnabled()){
-            System.out.println(type.name()+": "+msg);
-        }
-        
-        switch(type) {
-        case DEBUG:
-        	
+            System.out.println(type.name()+": *"+tag+"* "+msg);
         }
     }
 
-    public static void debug(String msg) {
-        log(Type.DEBUG, msg);
+    public static void debug(String tag, String msg) {
+        log(Type.DEBUG, tag, msg);
     }
 
-    public static void info(String msg) {
-        log(Type.INFO, msg);
+    public static void info(String tag,String msg) {
+        log(Type.INFO, tag, msg);
     }
 
-    public static void message(String msg) {
-        log(Type.MSG, msg);
+    public static void message(String tag, String msg) {
+        log(Type.MSG, tag, msg);
     }
 
-    public static void warn(String msg) {
-        log(Type.WARN, msg);
+    public static void warn(String tag, String msg) {
+        log(Type.WARN, tag, msg);
     }
 
-    public static void error(String msg) {
-        log(Type.ERROR, msg);
+    public static void error(String tag, String msg) {
+        log(Type.ERROR, tag, msg);
     }
 }
