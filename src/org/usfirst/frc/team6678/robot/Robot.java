@@ -43,7 +43,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		System.out.println("Hello, World!");
+		Log.message("Robot Init started");
 
 		//Saetter kompressoren til at automatisk koere naar noedvendigt
 		compressor.setClosedLoopControl(true);
@@ -51,6 +51,8 @@ public class Robot extends IterativeRobot {
 		for(int i = 0; i < 10; i++)
 			setupStreamingCamera(i);
 		setupServer(4444);
+
+		Log.info("Robot Init finish");
 	}
 
 	/**
@@ -58,9 +60,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+	    Log.message("Autonomous Init started");
 		timer.reset();
 		timer.start();
 		autonomous.init();
+		Log.info("Autonomous Init finished");
 	}
 
 	/**

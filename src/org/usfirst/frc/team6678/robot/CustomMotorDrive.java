@@ -31,6 +31,7 @@ public class CustomMotorDrive {
 	 * @param rightMotor1Port Porten til den anden motor i hoejre side.
 	 */
 	public CustomMotorDrive(int lefMotor0Port, int lefMotor1Port, int rightMotor0Port, int rightMotor1Port) {
+		Log.message("CustomMotorDrive constructor");
 		leftMotor0 = new Talon(lefMotor0Port);
 		leftMotor1 = new Talon(lefMotor1Port);
 		rightMotor0 = new Talon(rightMotor0Port);
@@ -56,6 +57,7 @@ public class CustomMotorDrive {
 	}
 	
 	public void stopMotors() {
+		Log.message("");
 		acceleratedLeftMotor = 0;
 		acceleratedRightMotor = 0;
 		leftMotor0.set(0);
