@@ -12,7 +12,13 @@ public class CustomMotorDrive {
 	
 	private Talon leftMotor0, leftMotor1, rightMotor0, rightMotor1;
 	private boolean invertRightMotors = false, invertLeftMotors = false;
-	
+
+    // Acceleration for left and right motor
+    private double lastAccelerationTimestamp = 0;
+    final private double acceleration = 0.08; // Percentage acceleration
+    private double acceleratedLeftMotor = 0;
+    private double acceleratedRightMotor = 0;
+
 	/**
 	 * Instantierer klassen med referencer til de fire PWM-porte, som de fire motorer,
 	 * der skal kontrolleres og styres fra denne klasse, er kablet til.
@@ -49,6 +55,15 @@ public class CustomMotorDrive {
 		invertRightMotors = invert;
 	}
 	
+	public void stopMotors() {
+		acceleratedLeftMotor = 0;
+		acceleratedRightMotor = 0;
+		leftMotor0.set(0);
+		leftMotor1.set(0);
+		rightMotor0.set(0);
+		rightMotor1.set(0);
+	}
+	
 	
 	/**
 	 * Koerer robotten som angivet i de to parametre herunder. Metoden styrer de motorcontrollere,
@@ -66,22 +81,24 @@ public class CustomMotorDrive {
 		else if(leftMotorPower < -1) leftMotorPower = -1;
 		if(rightMotorPower > 1) rightMotorPower = 1;
 		else if(rightMotorPower < -1) rightMotorPower = -1;
+
+		updateAcceleration(leftMotorPower, rightMotorPower);
 		
-		leftMotor0.set((invertLeftMotors ? -leftMotorPower : leftMotorPower));
-		leftMotor1.set((invertLeftMotors ? -leftMotorPower : leftMotorPower));
-		rightMotor0.set((invertRightMotors ? -rightMotorPower : rightMotorPower));
-		rightMotor1.set((invertRightMotors ? -rightMotorPower : rightMotorPower));
+		leftMotor0.set((invertLeftMotors ? -acceleratedLeftMotor : acceleratedLeftMotor));
+		leftMotor1.set((invertLeftMotors ? -acceleratedLeftMotor : acceleratedLeftMotor));
+		rightMotor0.set((invertRightMotors ? -acceleratedRightMotor : acceleratedRightMotor));
+		rightMotor1.set((invertRightMotors ? -acceleratedRightMotor : acceleratedRightMotor));
 	}
 	
 	/**
 	 * Koerer robotten fremad eller baglaens som om den er en bil. Dette skal forstaaes som,
 	 * at motorerne i begge sider som udganspunkt koerer lige hurtigt, men ved at justere
-	 * vaerdien {@value x} kan den ene af motorernes hastighed nedsaettes. Dog vil begge sider altid
+	 * vaerdien {@param x} kan den ene af motorernes hastighed nedsaettes. Dog vil begge sider altid
 	 * enten koere i samme retning eller slet ikke koere - de to motorer kan altsaa ikke i denne
 	 * metode koere hver sin vej.
 	 * 
 	 * @param x Hvor meget robotten skal dreje. [-1;0[ drejer robotten mod venstre
-	 * og ]0;1] drejer robotten mod hoejre. Hvis {@value x} er lig 0, koerer robotten ligeud.
+	 * og ]0;1] drejer robotten mod hoejre. Hvis {@param x} er lig 0, koerer robotten ligeud.
 	 * @param y Robottens hastighed fra -1 (bak) til 1 (fremad).
 	 */
 	public void driveXY(double x, double y) {
@@ -100,7 +117,7 @@ public class CustomMotorDrive {
 	/**
 	 * Koerer robotten fremad eller baglaens som om den er en bil. Dette skal forstaaes som,
 	 * at motorerne i begge sider som udganspunkt koerer lige hurtigt, men ved at justere
-	 * vaerdien {@value x} kan den ene af motorernes hastighed nedsaettes. Dog vil begge sider altid
+	 * vaerdien {@param x} kan den ene af motorernes hastighed nedsaettes. Dog vil begge sider altid
 	 * enten koere i samme retning eller slet ikke koere - de to motorer kan altsaa ikke i denne
 	 * metode koere hver sin vej.
 	 * 
@@ -162,5 +179,17 @@ public class CustomMotorDrive {
 	public void tankTurn(double speed) {
 		driveTank(speed, -speed);
 	}
+
+    /**
+     * Updates the acceleration variables according to the motor speeds
+     * @param leftSpeed The speed for the left motor, value from -1 to 1
+     * @param rightSpeed The speed for the right motor, value from -1 to 1
+     */
+	private void updateAcceleration(double leftSpeed, double rightSpeed) {
+        double timeDelta = (System.currentTimeMillis() - lastAccelerationTimestamp) / 20;
+        lastAccelerationTimestamp = System.currentTimeMillis();
+        acceleratedLeftMotor += acceleration * (leftSpeed - acceleratedLeftMotor) * timeDelta;
+        acceleratedRightMotor += acceleration * (rightSpeed - acceleratedRightMotor) * timeDelta;
+    }
 	
 }
