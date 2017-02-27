@@ -15,6 +15,10 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.SerialPort.Parity;
+import edu.wpi.first.wpilibj.SerialPort.Port;
+import edu.wpi.first.wpilibj.SerialPort.StopBits;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.usfirst.frc.team6678.robot.autonomous.AutonomousHandler;
@@ -64,12 +68,16 @@ public class Robot extends IterativeRobot {
 		autonomous.init();
 	}
 
+	
+	SerialPort sp = new SerialPort(9600, Port.kOnboard, 8, Parity.kNone, StopBits.kOne);
 	/**
 	 * This function is called periodically during autonomous
 	 */
 	@Override
 	public void autonomousPeriodic() { //Skal laves fuldkommen om fra bunden...
 		autonomous.loop();
+		
+		System.out.println("Serial input: " + sp.readString());
 	}
 
 	/**
