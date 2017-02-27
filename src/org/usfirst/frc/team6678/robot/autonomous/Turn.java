@@ -44,7 +44,8 @@ public class Turn implements Autonomous {
     public void loop() {
         if(!running) return;
 
-        if(Math.abs(gyro.getAngle()) > Math.abs(degreesToTurn)){
+        if(Math.abs(gyro.getAngle()) > Math.abs(degreesToTurn)) {
+            customMotorDrive.stopMotors();
             stop();
         } else {
         	//Implementer en slope mekanisme, eller lev med at den drejer langsomt... (derfor delt med 3)
