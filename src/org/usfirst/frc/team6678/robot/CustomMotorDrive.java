@@ -13,12 +13,11 @@ public class CustomMotorDrive {
 	private Talon leftMotor0, leftMotor1, rightMotor0, rightMotor1;
 	private boolean invertRightMotors = false, invertLeftMotors = false;
 
-	// Acceleration for left and right motor
-	private double accelerationLeft = 0;
-	private double accelerationRight = 0;
-	private double lastAccelerationTimestamp = 0;
-	private double accelerationDrag = 10; // The lower a value the more drag on the robot, when accelerating
-    private double accelerationDamp = 2;  // The lower a value the more damping on the robot, when decelerating
+    // Acceleration for left and right motor
+    private double lastAccelerationTimestamp = 0;
+    private double acceleration = 0.05; // Percentage acceleration
+    private double acceleratedLeftMotor = 0;
+    private double acceleratedRightMotor = 0;
 
 	/**
 	 * Instantierer klassen med referencer til de fire PWM-porte, som de fire motorer,
@@ -75,25 +74,22 @@ public class CustomMotorDrive {
 		else if(rightMotorPower < -1) rightMotorPower = -1;
 
 		updateAcceleration(leftMotorPower, rightMotorPower);
-
-		leftMotorPower *= accelerationLeft;
-		rightMotorPower *= accelerationRight;
 		
-		leftMotor0.set((invertLeftMotors ? -leftMotorPower : leftMotorPower));
-		leftMotor1.set((invertLeftMotors ? -leftMotorPower : leftMotorPower));
-		rightMotor0.set((invertRightMotors ? -rightMotorPower : rightMotorPower));
-		rightMotor1.set((invertRightMotors ? -rightMotorPower : rightMotorPower));
+		leftMotor0.set((invertLeftMotors ? -acceleratedLeftMotor : acceleratedLeftMotor));
+		leftMotor1.set((invertLeftMotors ? -acceleratedLeftMotor : acceleratedLeftMotor));
+		rightMotor0.set((invertRightMotors ? -acceleratedRightMotor : acceleratedRightMotor));
+		rightMotor1.set((invertRightMotors ? -acceleratedRightMotor : acceleratedRightMotor));
 	}
 	
 	/**
 	 * Koerer robotten fremad eller baglaens som om den er en bil. Dette skal forstaaes som,
 	 * at motorerne i begge sider som udganspunkt koerer lige hurtigt, men ved at justere
-	 * vaerdien {@value x} kan den ene af motorernes hastighed nedsaettes. Dog vil begge sider altid
+	 * vaerdien {@param x} kan den ene af motorernes hastighed nedsaettes. Dog vil begge sider altid
 	 * enten koere i samme retning eller slet ikke koere - de to motorer kan altsaa ikke i denne
 	 * metode koere hver sin vej.
 	 * 
 	 * @param x Hvor meget robotten skal dreje. [-1;0[ drejer robotten mod venstre
-	 * og ]0;1] drejer robotten mod hoejre. Hvis {@value x} er lig 0, koerer robotten ligeud.
+	 * og ]0;1] drejer robotten mod hoejre. Hvis {@param x} er lig 0, koerer robotten ligeud.
 	 * @param y Robottens hastighed fra -1 (bak) til 1 (fremad).
 	 */
 	public void driveXY(double x, double y) {
@@ -112,7 +108,7 @@ public class CustomMotorDrive {
 	/**
 	 * Koerer robotten fremad eller baglaens som om den er en bil. Dette skal forstaaes som,
 	 * at motorerne i begge sider som udganspunkt koerer lige hurtigt, men ved at justere
-	 * vaerdien {@value x} kan den ene af motorernes hastighed nedsaettes. Dog vil begge sider altid
+	 * vaerdien {@param x} kan den ene af motorernes hastighed nedsaettes. Dog vil begge sider altid
 	 * enten koere i samme retning eller slet ikke koere - de to motorer kan altsaa ikke i denne
 	 * metode koere hver sin vej.
 	 * 
@@ -181,24 +177,16 @@ public class CustomMotorDrive {
      * @param rightSpeed The speed for the right motor, value from -1 to 1
      */
 	private void updateAcceleration(double leftSpeed, double rightSpeed) {
+        double timeDelta = (System.currentTimeMillis() - lastAccelerationTimestamp) / 20;
+        lastAccelerationTimestamp = System.currentTimeMillis();
+        acceleratedLeftMotor = acceleratedLeftMotor + acceleration * (leftSpeed - acceleratedLeftMotor) * timeDelta;
+        acceleratedRightMotor = acceleratedLeftMotor + acceleration * (leftSpeed - acceleratedLeftMotor) * timeDelta;
 
-	    double accelerationDecrease = (System.currentTimeMillis() - lastAccelerationTimestamp) / accelerationDamp;
-	    lastAccelerationTimestamp = System.currentTimeMillis();
+        if(acceleratedLeftMotor > 0.95) acceleratedLeftMotor = 1;
+        if(acceleratedRightMotor > 0.95) acceleratedRightMotor = 1;
 
-        // Gange 1000 for at matche accelerationDecrease, som er i millisekunder
-        accelerationLeft += leftSpeed * 1000 / accelerationDrag;
-        accelerationRight += rightSpeed * 1000 / accelerationDrag;
-
-	    accelerationLeft -= accelerationDecrease;
-	    accelerationRight -= accelerationDecrease;
-
-	    if(accelerationLeft < 0) accelerationLeft = 0;
-	    if(accelerationRight < 0) accelerationRight = 0;
-
-        System.out.println("accelerationDecrease = " + accelerationDecrease);
-        System.out.println("accelerationLeft = " + accelerationLeft);
-        System.out.println("accelerationRight = " + accelerationRight);
-        System.out.println("--------------------------------");
+        if(acceleratedLeftMotor < 0.05) acceleratedLeftMotor = 0;
+        if(acceleratedRightMotor < 0.05) acceleratedLeftMotor = 0;
     }
 	
 }
