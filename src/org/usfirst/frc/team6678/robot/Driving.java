@@ -15,7 +15,7 @@ public class Driving {
 	
 	final double yThreshold = 0.05;
 	final double xThreshold = 0.15;
-	boolean calibrated = false;
+	boolean calibrated = false, invertedControls = false;
 	
 	Driving(Joystick s){
 		driver.invertRightMotors(true);
@@ -37,8 +37,10 @@ public class Driving {
 	        return;
         }*/
 
-		double sensitivity = 1-(stick.getThrottle()+1)/2;
-		double x = stick.getX(), y = -stick.getY(), twist = stick.getTwist();
+		double sensitivity = 1-(stick.getThrottle()+1)/2,
+				x = stick.getX()*(invertedControls ? -1 : 1),
+				y = -stick.getY()*(invertedControls ? -1 : 1),
+				twist = stick.getTwist()*(invertedControls ? -1 : 1);
 		if(x < xThreshold*sensitivity && x > -xThreshold*sensitivity) x = 0;
 		if(y < yThreshold && y > -yThreshold) y = 0;
 		
@@ -88,10 +90,11 @@ public class Driving {
 		if(runningAutonomous != null && !runningAutonomous.isRunning())
 			runningAutonomous = null;
 
-		if(Math.abs(twist) < Math.abs(x) || Math.abs(twist) < Math.abs(y)) {
+		if(Math.abs(twist) < Math.abs(x)*2 || Math.abs(twist) < Math.abs(y)*1.5) {
 			//x*(1-0.75*sensitivity*sensitivity) //Den gamle version
 			double xScalingCoefficient = 1-0.75*sensitivity*x*sensitivity*x; //1-0.75*(x*sensitivity)^2)
-			driver.driveXY(x*sensitivity*xScalingCoefficient, y*sensitivity); //Ny scaling factor, der skal testes
+			double offset = xThreshold*sensitivity*Math.signum(x);
+			driver.driveXY(x*sensitivity*xScalingCoefficient-offset, y*sensitivity);
 		} else {
 			driver.tankTurn(twist*sensitivity);
 		}

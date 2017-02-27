@@ -5,7 +5,7 @@ import org.usfirst.frc.team6678.robot.CustomMotorDrive;
 
 /**
  * Denne klasse drejer robotten 'autonomt' et vist antal grader.
- * Præcisionen er dog relativt dårlig.
+ * Praecisionen er dog relativt daarlig.
  */
 public class Turn implements Autonomous {
 
