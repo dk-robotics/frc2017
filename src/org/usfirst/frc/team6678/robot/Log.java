@@ -5,7 +5,7 @@ package org.usfirst.frc.team6678.robot;
  * Created by viktorstrate on 2/27/17.
  */
 public class Log {
-
+	
     public enum Type {
         DEBUG(true), INFO(true), MSG(true), WARN(true), ERROR(true);
 
@@ -20,9 +20,20 @@ public class Log {
         }
     }
 
+	Type loggingLevel = Type.ERROR;
+    
+    public void setLoggingLevel(Type level) {
+    	loggingLevel = level;
+    }
+
     private static void log(Type type, String msg){
         if(type.isEnabled()){
             System.out.println(type.name()+": "+msg);
+        }
+        
+        switch(type) {
+        case DEBUG:
+        	
         }
     }
 
