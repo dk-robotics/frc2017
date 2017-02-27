@@ -15,7 +15,7 @@ public class Driving {
 	
 	final double yThreshold = 0.05;
 	final double xThreshold = 0.15;
-	boolean calibrated = false;
+	boolean calibrated = false, invertedControls = false;
 	
 	Driving(Joystick s){
 		driver.invertRightMotors(true);
@@ -37,8 +37,10 @@ public class Driving {
 	        return;
         }*/
 
-		double sensitivity = 1-(stick.getThrottle()+1)/2;
-		double x = stick.getX(), y = -stick.getY(), twist = stick.getTwist();
+		double sensitivity = 1-(stick.getThrottle()+1)/2,
+				x = stick.getX()*(invertedControls ? -1 : 1),
+				y = -stick.getY()*(invertedControls ? -1 : 1),
+				twist = stick.getTwist()*(invertedControls ? -1 : 1);
 		if(x < xThreshold*sensitivity && x > -xThreshold*sensitivity) x = 0;
 		if(y < yThreshold && y > -yThreshold) y = 0;
 		
