@@ -185,15 +185,20 @@ public class CustomMotorDrive {
 	    double accelerationDecrease = (System.currentTimeMillis() - lastAccelerationTimestamp) / accelerationDamp;
 	    lastAccelerationTimestamp = System.currentTimeMillis();
 
+        // Gange 1000 for at matche accelerationDecrease, som er i millisekunder
+        accelerationLeft += leftSpeed * 1000 / accelerationDrag;
+        accelerationRight += rightSpeed * 1000 / accelerationDrag;
+
 	    accelerationLeft -= accelerationDecrease;
 	    accelerationRight -= accelerationDecrease;
 
 	    if(accelerationLeft < 0) accelerationLeft = 0;
 	    if(accelerationRight < 0) accelerationRight = 0;
 
-	    // Gange 1000 for at matche accelerationDecrease, som er i millisekunder
-	    accelerationLeft += leftSpeed * 1000 / accelerationDrag;
-	    accelerationRight += rightSpeed * 1000 / accelerationDrag;
+        System.out.println("accelerationDecrease = " + accelerationDecrease);
+        System.out.println("accelerationLeft = " + accelerationLeft);
+        System.out.println("accelerationRight = " + accelerationRight);
+        System.out.println("--------------------------------");
     }
 	
 }
