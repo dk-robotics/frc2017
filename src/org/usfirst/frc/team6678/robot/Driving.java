@@ -91,7 +91,8 @@ public class Driving {
 		if(Math.abs(twist) < Math.abs(x) || Math.abs(twist) < Math.abs(y)) {
 			//x*(1-0.75*sensitivity*sensitivity) //Den gamle version
 			double xScalingCoefficient = 1-0.75*sensitivity*x*sensitivity*x; //1-0.75*(x*sensitivity)^2)
-			driver.driveXY(x*sensitivity*xScalingCoefficient-x*sensitivity*Math.signum(x), y*sensitivity); //Ny scaling factor, der skal testes
+			double offset = xThreshold*sensitivity*Math.signum(x);
+			driver.driveXY(x*sensitivity*xScalingCoefficient-offset, y*sensitivity);
 		} else {
 			driver.tankTurn(twist*sensitivity);
 		}
