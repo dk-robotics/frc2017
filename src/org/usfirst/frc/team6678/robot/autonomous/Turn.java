@@ -48,8 +48,7 @@ public class Turn implements Autonomous {
             customMotorDrive.stopMotors();
             stop();
         } else {
-        	//Implementer en slope mekanisme, eller lev med at den drejer langsomt... (derfor delt med 3)
-            customMotorDrive.tankTurn(Math.signum(degreesToTurn)/3);
+            customMotorDrive.tankTurn(Math.signum(degreesToTurn)/2);
             System.out.println("From the Turn loop...");
         }
     }
