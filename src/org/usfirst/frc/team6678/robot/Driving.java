@@ -3,6 +3,7 @@ package org.usfirst.frc.team6678.robot;
 import org.usfirst.frc.team6678.robot.autonomous.Autonomous;
 import org.usfirst.frc.team6678.robot.autonomous.Turn;
 
+import backgroundTasks.ButtonSwitchState;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -11,6 +12,7 @@ public class Driving {
 	CustomMotorDrive driver = new CustomMotorDrive(0, 1, 2, 3);
 	ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 	private Joystick stick;
+	private ButtonSwitchState invertSwitchButton;
 	Autonomous runningAutonomous = null;
 	
 	final double yThreshold = 0.05;
@@ -20,6 +22,7 @@ public class Driving {
 	Driving(Joystick s){
 		driver.invertRightMotors(true);
 		stick = s;
+		invertSwitchButton = new ButtonSwitchState(stick, 8);
 		gyro.calibrate(); //Dette tager maaske en 'evighed' og delay'er opstarten af koden?
 	}
 	
@@ -32,31 +35,30 @@ public class Driving {
             runningAutonomous.stop();
             runningAutonomous = null;
         }
-
-	    /*if(runningAutonomous != null && runningAutonomous.isRunning()) {
-	        return;
-        }*/
-
+        
+        invertSwitchButton.loop();
+        invertedControls = invertSwitchButton.getState();
+        
 		double sensitivity = 1-(stick.getThrottle()+1)/2,
 				x = stick.getX()*(invertedControls ? -1 : 1),
 				y = -stick.getY()*(invertedControls ? -1 : 1),
-				twist = stick.getTwist()*(invertedControls ? -1 : 1);
+				twist = stick.getTwist();//*(invertedControls ? -1 : 1);
 		if(x < xThreshold*sensitivity && x > -xThreshold*sensitivity) x = 0;
 		if(y < yThreshold && y > -yThreshold) y = 0;
 		
 		if(stick.getRawButton(2)) {
 			if(!calibrated) {
+				driver.alignAccelerationValues();
 				calibrated = true;
 				gyro.reset();
 			}
-			// TODO opdater til drivePolar naar METODEN :) er faerdig implementeret
-			driver.driveXY(-gyro.getAngle()/45, sensitivity); //Tilfaeldig koefficient der virker :D
+			driver.driveXY(-gyro.getAngle()/45*(invertedControls ? -1 : 1), sensitivity*(invertedControls ? -1 : 1)); //Tilfaeldig koefficient der virker :D
 			return;
 		} else {
 			calibrated = false;
 		}
 		
-		//Drej hhv 90 grader mod uret, 90 grader med uret og 180 grader ved tryk på en knap:
+		//Drej hhv 90 grader mod uret, 90 grader med uret og 180 grader ved tryk paa en knap:
 		//Maaske skal prioriteterne byttes om, men foerst skal det bare tjekkes om det virker...
 		if(stick.getRawButton(3)) {
 			if(runningAutonomous == null) {
@@ -83,7 +85,6 @@ public class Driving {
 		
 		if(runningAutonomous != null && runningAutonomous.isRunning()) {
 			runningAutonomous.loop();
-			System.out.println("Looping the turn...");
 			return;
 		}
 		
