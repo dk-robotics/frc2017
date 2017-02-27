@@ -88,7 +88,7 @@ public class Driving {
 		if(runningAutonomous != null && !runningAutonomous.isRunning())
 			runningAutonomous = null;
 
-		if(Math.abs(twist) < Math.abs(x) || Math.abs(twist) < Math.abs(y)) {
+		if(Math.abs(twist) < Math.abs(x)*2 || Math.abs(twist) < Math.abs(y)*1.5) {
 			//x*(1-0.75*sensitivity*sensitivity) //Den gamle version
 			double xScalingCoefficient = 1-0.75*sensitivity*x*sensitivity*x; //1-0.75*(x*sensitivity)^2)
 			double offset = xThreshold*sensitivity*Math.signum(x);
