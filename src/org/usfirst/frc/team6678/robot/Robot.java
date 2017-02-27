@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -92,8 +93,9 @@ public class Robot extends IterativeRobot {
 			actuator.set(Value.kReverse);
 		}
 		
-		if(!stick.getRawButton(12))
+		if(!stick.getRawButton(12)) {
 			driving.loop();
+		}
 	}
 
 	/**

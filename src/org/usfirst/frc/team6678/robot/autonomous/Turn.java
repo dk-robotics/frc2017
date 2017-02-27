@@ -49,7 +49,6 @@ public class Turn implements Autonomous {
             stop();
         } else {
             customMotorDrive.tankTurn(Math.signum(degreesToTurn)/2);
-            System.out.println("From the Turn loop...");
         }
     }
 }

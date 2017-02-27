@@ -64,6 +64,9 @@ public class CustomMotorDrive {
 		rightMotor1.set(0);
 	}
 	
+	public void alignAccelerationValues() {
+		acceleratedLeftMotor = acceleratedRightMotor;
+	}
 	
 	/**
 	 * Koerer robotten som angivet i de to parametre herunder. Metoden styrer de motorcontrollere,
