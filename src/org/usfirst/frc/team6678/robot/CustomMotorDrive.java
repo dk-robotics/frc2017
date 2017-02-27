@@ -15,7 +15,7 @@ public class CustomMotorDrive {
 
     // Acceleration for left and right motor
     private double lastAccelerationTimestamp = 0;
-    private double acceleration = 0.05; // Percentage acceleration
+    private double acceleration = 0.1; // Percentage acceleration
     private double acceleratedLeftMotor = 0;
     private double acceleratedRightMotor = 0;
 
@@ -180,13 +180,13 @@ public class CustomMotorDrive {
         double timeDelta = (System.currentTimeMillis() - lastAccelerationTimestamp) / 20;
         lastAccelerationTimestamp = System.currentTimeMillis();
         acceleratedLeftMotor = acceleratedLeftMotor + acceleration * (leftSpeed - acceleratedLeftMotor) * timeDelta;
-        acceleratedRightMotor = acceleratedLeftMotor + acceleration * (leftSpeed - acceleratedLeftMotor) * timeDelta;
+        acceleratedRightMotor = acceleratedRightMotor + acceleration * (rightSpeed - acceleratedRightMotor) * timeDelta;
 
         if(acceleratedLeftMotor > 0.95) acceleratedLeftMotor = 1;
         if(acceleratedRightMotor > 0.95) acceleratedRightMotor = 1;
 
-        if(acceleratedLeftMotor < 0.05) acceleratedLeftMotor = 0;
-        if(acceleratedRightMotor < 0.05) acceleratedLeftMotor = 0;
+        //if(acceleratedLeftMotor < 0.005) acceleratedLeftMotor = 0;
+        //if(acceleratedRightMotor < 0.005) acceleratedLeftMotor = 0;
     }
 	
 }
