@@ -22,11 +22,13 @@ public class Driving {
 	
 	Driving(Joystick s){
 		Log.message("Driving", "Initializing");
+		long initStartTime = System.currentTimeMillis();
 		driver.invertRightMotors(true);
 		stick = s;
 		invertSwitchButton = new ButtonSwitchState(stick, 8);
 		gyro.calibrate(); //Dette tager maaske en 'evighed' og delay'er opstarten af koden?
         Log.info("Driving", "Initializing finished");
+        Log.debug("Driving", "Constructor time: " + (System.currentTimeMillis()-initStartTime));
     }
 	
 	/**
