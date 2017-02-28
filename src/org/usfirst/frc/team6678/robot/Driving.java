@@ -2,8 +2,8 @@ package org.usfirst.frc.team6678.robot;
 
 import org.usfirst.frc.team6678.robot.autonomous.Autonomous;
 import org.usfirst.frc.team6678.robot.autonomous.Turn;
+import org.usfirst.frc.team6678.robot.backgroundTasks.ButtonSwitchState;
 
-import backgroundTasks.ButtonSwitchState;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -17,6 +17,7 @@ public class Driving {
 	
 	final double yThreshold = 0.05;
 	final double xThreshold = 0.15;
+	
 	boolean calibrated = false, invertedControls = false;
 	
 	Driving(Joystick s){
