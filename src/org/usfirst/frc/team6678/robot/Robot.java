@@ -105,10 +105,14 @@ public class Robot extends IterativeRobot {
 			actuator.set(Value.kReverse);
 		}
 		
-		if(DriverStation.getInstance().getBatteryVoltage() >= 7.5 && !stick.getRawButton(12)) { //Needs testing!
+		
+		double voltage = DriverStation.getInstance().getBatteryVoltage();
+		Log.debug("Voltage", voltage + " V");
+		if(voltage >= 7.5 && !stick.getRawButton(12)) { //Needs testing!
 			driving.loop();
 		} else {
 			driving.driver.stopMotors();
+			Log.warn("Voltage", "Voltage is critically low! " + voltage + "V");
 		}
 		
 		if(!stick.getRawButton(12)) {
