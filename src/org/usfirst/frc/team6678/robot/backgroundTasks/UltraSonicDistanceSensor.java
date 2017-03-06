@@ -17,6 +17,8 @@ public class UltraSonicDistanceSensor extends SensorBase implements BackgroundTa
 
 	@Override
 	public void loop() {
+		//The output is an ASCII capital “R”, followed by three ASCII character digits representing the
+		//range in inches up to a maximum of 255, followed by a carriage return (ASCII 13). 
 		sp.readString();
 	}
 	
