@@ -3,6 +3,9 @@ package org.usfirst.frc.team6678.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 
+/**
+ * A low level class for motor driving mechanics
+ */
 public class CustomMotorDrive {
 
 	public enum Direction {
