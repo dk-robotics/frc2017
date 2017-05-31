@@ -18,5 +18,7 @@ You can find information on how to get the project up and running for your compu
 - [For Windows](https://github.com/dk-robotics/frc2017/wiki/Setup-on-Windows)
 - [For Linux](https://github.com/dk-robotics/frc2017/wiki/Setup-on-Linux)
 
+You can get a better understanding of the codebase under [the structure of the codebase](https://github.com/dk-robotics/frc2017/wiki/The-structure-of-the-codebase).
+
 ## Contributing
 Feel free to send a pull request, if you think you can improve the project. _If you have not used Github before, but still want to contribute, please read the [understanding the Github flow](https://guides.github.com/introduction/flow/) first.
