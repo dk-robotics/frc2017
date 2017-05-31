@@ -3,6 +3,7 @@ package org.usfirst.frc.team6678.robot;
 import org.usfirst.frc.team6678.robot.autonomous.Autonomous;
 import org.usfirst.frc.team6678.robot.autonomous.Turn;
 import org.usfirst.frc.team6678.robot.backgroundTasks.ButtonSwitchState;
+import org.usfirst.frc.team6678.robot.backgroundTasks.UltraSonicDistanceSensor;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Joystick;
@@ -17,6 +18,7 @@ public class Driving {
 	ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 	private Joystick stick;
 	private ButtonSwitchState invertSwitchButton;
+	private UltraSonicDistanceSensor distance = new UltraSonicDistanceSensor();
 	Autonomous runningAutonomous = null;
 	
 	final double yThreshold = 0.05;
@@ -41,7 +43,7 @@ public class Driving {
 	public void loop () {
 
         if(stick.getRawButton(12)) { //Annuller Turn!
-            Log.info("Driving", "Annullere autonomous turn");
+            Log.info("Driving", "Annullerer autonomous (herunder fx turn)");
             runningAutonomous.stop();
             runningAutonomous = null;
         }
@@ -64,7 +66,8 @@ public class Driving {
 				calibrated = true;
 				gyro.reset();
 			}
-			driver.driveXY(-gyro.getAngle()/45*(invertedControls ? -1 : 1), sensitivity*(invertedControls ? -1 : 1)); //Tilfaeldig koefficient der virker :D
+			if(distance.getDistance() > 300)
+				driver.driveXY(-gyro.getAngle()/45*(invertedControls ? -1 : 1), sensitivity*(invertedControls ? -1 : 1)); //Tilfaeldig koefficient der virker :D
 			return;
 		} else {
 			calibrated = false;
@@ -108,7 +111,8 @@ public class Driving {
 			//x*(1-0.75*sensitivity*sensitivity) //Den gamle version
 			double xScalingCoefficient = 1-0.75*sensitivity*x*sensitivity*x; //1-0.75*(x*sensitivity)^2)
 			double offset = xThreshold*sensitivity*Math.signum(x);
-			driver.driveXY(x*sensitivity*xScalingCoefficient-offset, y*sensitivity);
+			if(distance.getDistance() > 300)
+				driver.driveXY(x*sensitivity*xScalingCoefficient-offset, y*sensitivity);
 		} else {
 		    Log.debug("Driving", "Driving using tankTurn");
 			driver.tankTurn(twist*sensitivity);
