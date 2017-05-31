@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.SerialPort.StopBits;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.usfirst.frc.team6678.robot.autonomous.AutonomousHandler;
+import org.usfirst.frc.team6678.robot.backgroundTasks.UltraSonicDistanceSensor;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -73,7 +74,8 @@ public class Robot extends IterativeRobot {
 	}
 
 	
-	SerialPort sp = new SerialPort(9600, Port.kOnboard, 8, Parity.kNone, StopBits.kOne);
+	//SerialPort sp = new SerialPort(9600, Port.kOnboard, 8, Parity.kNone, StopBits.kOne);
+	UltraSonicDistanceSensor dist = new UltraSonicDistanceSensor();
 	/**
 	 * This function is called periodically during autonomous
 	 */
@@ -81,7 +83,8 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() { //Skal laves fuldkommen om fra bunden...
 		autonomous.loop();
 		
-		System.out.println("Serial input: " + sp.readString());
+		//System.out.println("Serial input: " + sp.readString());
+		dist.loop();
 	}
 
 	/**
