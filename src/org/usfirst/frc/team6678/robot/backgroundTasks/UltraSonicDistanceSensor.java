@@ -29,6 +29,11 @@ public class UltraSonicDistanceSensor extends SensorBase implements BackgroundTa
 		String rawData = sp.readString();
 
 		// *** THIS PART IS NOT TESTED YET ***
+		if(rawData == null || rawData.isEmpty() || rawData.length() < 4)
+			return;
+		
+		Log.debug("UltraSonicDistanceSensor", "Raw data input: " + rawData);
+		
 		rawData = rawData.substring(1, 3);
 
 		int inchValue = -1;
