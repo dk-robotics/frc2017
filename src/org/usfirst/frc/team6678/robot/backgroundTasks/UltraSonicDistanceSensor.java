@@ -8,7 +8,8 @@ import edu.wpi.first.wpilibj.SerialPort.StopBits;
 import org.usfirst.frc.team6678.robot.Log;
 
 /**
- * A class for using the the Ultra Sonic Distance Sensor
+ * A class for using the the Ultra Sonic Distance Sensor (LV-MaxSonar® -EZ)
+ * Using the RS-232 (Serial) protocol
  */
 public class UltraSonicDistanceSensor extends SensorBase implements BackgroundTask {
 	
@@ -43,6 +44,8 @@ public class UltraSonicDistanceSensor extends SensorBase implements BackgroundTa
 			hit = inchValue == 255;
 			distance = inchValue * 2.54;
 		}
+
+		Log.debug("UltraSonicDistanceSensor", "Distance: "+distance+" cm");
 	}
 
 	/**
