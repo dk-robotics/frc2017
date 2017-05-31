@@ -7,6 +7,10 @@ import org.usfirst.frc.team6678.robot.backgroundTasks.ButtonSwitchState;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Joystick;
 
+/**
+ * A high level class for handling driving mechanics for the robot.
+ * Refer to {@link CustomMotorDrive} for more low level driving mechanics.
+ */
 public class Driving {
 
 	CustomMotorDrive driver = new CustomMotorDrive(0, 1, 2, 3);
