@@ -25,26 +25,15 @@ public class UltraSonicDistanceSensor extends SensorBase implements BackgroundTa
 	@Override
 	public void loop() {
 		String rawData = sp.readString();
-
-<<<<<<< HEAD
-		// *** THIS PART IS NOT TESTED YET ***
 		if(rawData == null || rawData.isEmpty() || rawData.length() < 4)
 			return;
 		
-		Log.debug("UltraSonicDistanceSensor", "Raw data input: " + rawData);
-		
-		rawData = rawData.substring(1, 3);
-
-		int inchValue = -1;
-=======
 		rawData = rawData.substring(1, 4);
->>>>>>> master
 
 		try {
 			distance = Integer.parseInt(rawData);
 		} catch (NumberFormatException e){
-			Log.error("UltraSonicDistanceSensor", "Could not parse raw data from sensor:");
-			e.printStackTrace();
+			Log.error("UltraSonicDistanceSensor", "Could not parse raw data from sensor: " + rawData);
 		}
 
 		hit = distance == 5000;
