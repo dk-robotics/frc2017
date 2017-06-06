@@ -15,7 +15,7 @@ public class UltraSonicDistanceSensor extends SensorBase implements BackgroundTa
 	
 	SerialPort sp;
 	int distance;
-	boolean hit;
+	boolean hit, min;
 	
 	public UltraSonicDistanceSensor() {
 		sp = new SerialPort(9600, Port.kOnboard, 8, Parity.kNone, StopBits.kOne);
@@ -25,10 +25,10 @@ public class UltraSonicDistanceSensor extends SensorBase implements BackgroundTa
 	@Override
 	public void loop() {
 		String rawData = sp.readString();
-		if(rawData == null || rawData.isEmpty() || rawData.length() < 4)
+		if(rawData == null || rawData.isEmpty() || rawData.length() < 5)
 			return;
 		
-		rawData = rawData.substring(1, 4);
+		rawData = rawData.substring(1, 5);
 
 		try {
 			distance = Integer.parseInt(rawData);
@@ -36,8 +36,8 @@ public class UltraSonicDistanceSensor extends SensorBase implements BackgroundTa
 			Log.error("UltraSonicDistanceSensor", "Could not parse raw data from sensor: " + rawData);
 		}
 
-		hit = distance == 5000;
-
+		hit = distance != 5000;
+		min = distance == 300;
 	}
 
 	/**
@@ -49,11 +49,19 @@ public class UltraSonicDistanceSensor extends SensorBase implements BackgroundTa
 	}
 
 	/**
-	 * The sensor has a maximum range of 5m. This method returns whether or not the sensor hit somthing or not
-	 * @return True if sensor hit an object, false if not
+	 * The sensor has a maximum range of 5m. This method returns whether or not the sensor detects anything inside the range.
+	 * @return True if the sensor detects an object, false if not.
 	 */
-	public boolean getHit() {
+	public boolean isObjectDetected() {
 		return hit;
+	}
+	
+	/**
+	 * The sensor has a minimum range of 30cm. This method returns whether or not the sensor detects anything within the minimun range.
+	 * @return True if the sensor detects an object within 30cm, false if not.
+	 */
+	public boolean isObjectWithinMinimumRange() {
+		return min;
 	}
 	
 }
