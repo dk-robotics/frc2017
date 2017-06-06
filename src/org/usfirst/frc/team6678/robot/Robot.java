@@ -15,10 +15,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.SerialPort.Parity;
-import edu.wpi.first.wpilibj.SerialPort.Port;
-import edu.wpi.first.wpilibj.SerialPort.StopBits;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.usfirst.frc.team6678.robot.autonomous.AutonomousHandler;
@@ -158,7 +154,7 @@ public class Robot extends IterativeRobot {
 	        ) {
 				WebServerHandler handler = new WebServerHandler();
 				String input;
-				while(clientSocket.isConnected() && !clientSocket.isClosed()) { //Mangler at blive testet - hvis det ikke virker, kan det erstattes med 'true'
+				while(clientSocket.isConnected() && !clientSocket.isClosed()) {
 					if((input = in.readLine()) != null)
 						out.println(handler.handleInput(input));
 				}
