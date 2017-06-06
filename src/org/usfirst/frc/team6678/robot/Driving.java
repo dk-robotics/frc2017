@@ -2,6 +2,7 @@ package org.usfirst.frc.team6678.robot;
 
 import org.usfirst.frc.team6678.robot.autonomous.Autonomous;
 import org.usfirst.frc.team6678.robot.autonomous.Turn;
+import org.usfirst.frc.team6678.robot.backgroundTasks.BackgroundTaskHandler;
 import org.usfirst.frc.team6678.robot.backgroundTasks.ButtonSwitchState;
 import org.usfirst.frc.team6678.robot.backgroundTasks.UltraSonicDistanceSensor;
 
@@ -32,6 +33,8 @@ public class Driving {
 		driver.invertRightMotors(true);
 		stick = s;
 		invertSwitchButton = new ButtonSwitchState(stick, 8);
+		BackgroundTaskHandler.handleBackgroundTask(invertSwitchButton);
+		BackgroundTaskHandler.handleBackgroundTask(distance);
 		gyro.calibrate(); //Dette tager maaske en 'evighed' og delay'er opstarten af koden?
         Log.info("Driving", "Initializing finished");
         Log.debug("Driving", "Constructor time: " + (System.currentTimeMillis()-initStartTime));
@@ -48,7 +51,7 @@ public class Driving {
             runningAutonomous = null;
         }
         
-        invertSwitchButton.loop();
+        //invertSwitchButton.loop();
         invertedControls = invertSwitchButton.getState();
         
 		double sensitivity = 1-(stick.getThrottle()+1)/2,
