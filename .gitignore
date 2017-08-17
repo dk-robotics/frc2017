@@ -5,3 +5,4 @@ dist/
 # For intellij
 .idea
 *.iml
+out/
