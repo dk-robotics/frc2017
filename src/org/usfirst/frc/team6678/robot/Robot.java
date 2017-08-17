@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.usfirst.frc.team6678.robot.autonomous.AutonomousHandler;
+import org.usfirst.frc.team6678.robot.backgroundTasks.BackgroundTaskHandler;
 import org.usfirst.frc.team6678.robot.backgroundTasks.UltraSonicDistanceSensor;
 
 /**
@@ -34,7 +35,6 @@ public class Robot extends IterativeRobot {
 	private Joystick stick = new Joystick(0);
 	private Driving driving = new Driving(stick);
 	private AutonomousHandler autonomous = new AutonomousHandler(timer, driving.driver);
-
 	
 	private Compressor compressor = new Compressor(0);
 	private DoubleSolenoid actuator = new DoubleSolenoid(0, 1);
@@ -57,6 +57,18 @@ public class Robot extends IterativeRobot {
 		Log.info("Robot", "Robot Init finish");
 	}
 
+	
+	/**
+	 * This function is called periodically while the robot is enabled
+	 * Code that shall be run in all modes, e.g. {@link #autonomousPeriodic()}, {@link #teleopPeriodic()},
+	 * {@link #testPeriodic()} and {@link #disabledPeriodic()}, can be placed here,
+	 * instead of providing the same code in every of the aforementioned methods. 
+	 */
+	@Override
+	public void robotPeriodic() {
+		BackgroundTaskHandler.handle();
+	}
+	
 	/**
 	 * This function is run once each time the robot enters autonomous mode
 	 */
