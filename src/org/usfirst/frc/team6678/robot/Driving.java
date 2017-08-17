@@ -59,6 +59,7 @@ public class Driving {
 		if(y < yThreshold && y > -yThreshold) y = 0;
 
 		Log.debug("Driving", String.format("Loop x: %s y: %s", x, y));
+		Log.debug("Driving", String.format("Loop joystick x: %s y: %s twist: %s", stick.getX(), stick.getY(), stick.getTwist()));
 		
 		if(stick.getRawButton(2)) {
 			if(!calibrated) {
@@ -111,7 +112,7 @@ public class Driving {
 			//x*(1-0.75*sensitivity*sensitivity) //Den gamle version
 			double xScalingCoefficient = 1-0.75*sensitivity*x*sensitivity*x; //1-0.75*(x*sensitivity)^2)
 			double offset = xThreshold*sensitivity*Math.signum(x);
-			if(distance.getDistance() > 300)
+			//if(distance.getDistance() > 300)
 				driver.driveXY(x*sensitivity*xScalingCoefficient-offset, y*sensitivity);
 		} else {
 		    Log.debug("Driving", "Driving using tankTurn");
