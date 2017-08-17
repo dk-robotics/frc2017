@@ -58,7 +58,10 @@ public class Driving {
 				x = stick.getX()*(invertedControls ? -1 : 1),
 				y = -stick.getY()*(invertedControls ? -1 : 1),
 				twist = stick.getTwist();//*(invertedControls ? -1 : 1);
-		if(x < xThreshold*sensitivity && x > -xThreshold*sensitivity) x = 0;
+		if(x < xThreshold*sensitivity && x > -xThreshold*sensitivity)
+			x = 0;
+		else
+			x -= xThreshold*sensitivity*Math.signum(x);
 		if(y < yThreshold && y > -yThreshold) y = 0;
 
 		Log.debug("Driving", String.format("Loop x: %s y: %s", x, y));
@@ -110,17 +113,20 @@ public class Driving {
 		if(runningAutonomous != null && !runningAutonomous.isRunning())
 			runningAutonomous = null;
 
+		handleStickDriving(x,y, twist, sensitivity);
+	}
+
+	private void handleStickDriving(double x, double y, double twist, double sensitivity) {
 		if(Math.abs(twist) < Math.abs(x)*2 || Math.abs(twist) < Math.abs(y)*1.5) {
-		    Log.debug("Driving", "Driving using driveXY");
-			//x*(1-0.75*sensitivity*sensitivity) //Den gamle version
+			Log.debug("Driving", "Driving using driveXY");
 			double xScalingCoefficient = 1-0.75*sensitivity*x*sensitivity*x; //1-0.75*(x*sensitivity)^2)
 			double offset = xThreshold*sensitivity*Math.signum(x);
-			//if(distance.getDistance() > 300)
-				driver.driveXY(x*sensitivity*xScalingCoefficient-offset, y*sensitivity);
+			if(distance.getDistance() > 300)
+				driver.driveXY(x*sensitivity*xScalingCoefficient/*-offset*/, y*sensitivity);
 		} else {
-		    Log.debug("Driving", "Driving using tankTurn");
+			Log.debug("Driving", "Driving using tankTurn");
 			driver.tankTurn(twist*sensitivity);
 		}
 	}
-	
+
 }
