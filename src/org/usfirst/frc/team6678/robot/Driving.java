@@ -25,17 +25,22 @@ public class Driving {
 	final double yThreshold = 0.05;
 	final double xThreshold = 0.15;
 	
-	boolean calibrated = false, invertedControls = false;
+	boolean calibrated = false;
 	
-	Driving(Joystick s){
+	Driving(Joystick joystick){
 		Log.message("Driving", "Initializing");
 		long initStartTime = System.currentTimeMillis();
+
 		driver.invertRightMotors(true);
-		stick = s;
+		stick = joystick;
+
 		invertSwitchButton = new ButtonSwitchState(stick, 8);
 		BackgroundTaskHandler.handleBackgroundTask(invertSwitchButton);
 		BackgroundTaskHandler.handleBackgroundTask(distance);
+		BackgroundTaskHandler.handleBackgroundTask(runningAutonomous);
+
 		gyro.calibrate(); //Dette tager maaske en 'evighed' og delay'er opstarten af koden?
+
         Log.info("Driving", "Initializing finished");
         Log.debug("Driving", "Constructor time: " + (System.currentTimeMillis()-initStartTime));
     }
@@ -44,28 +49,29 @@ public class Driving {
 	 * Bliver kaldt fra {@link Robot#teleopPeriodic()}
 	 */
 	public void loop () {
-
-        if(stick.getRawButton(12)) { //Annuller Turn!
+		//Stop runningAutonomous (ie Turn) and stop movement
+        if(stick.getRawButton(12)) {
             Log.info("Driving", "Annullerer autonomous (herunder fx turn)");
             runningAutonomous.stop();
             runningAutonomous = null;
+            driver.stopMotors();
+            return;
         }
-        
-        //invertSwitchButton.loop();
-        invertedControls = invertSwitchButton.getState();
-        
-		double sensitivity = 1-(stick.getThrottle()+1)/2,
-				x = stick.getX()*(invertedControls ? -1 : 1),
-				y = -stick.getY()*(invertedControls ? -1 : 1),
-				twist = stick.getTwist();//*(invertedControls ? -1 : 1);
-		if(x < xThreshold*sensitivity && x > -xThreshold*sensitivity)
+
+        boolean invertedControls = invertSwitchButton.getState();
+
+		double throttle = 1-(stick.getThrottle()+1)/2d;
+		double x = stick.getX()*(invertedControls ? -1 : 1);
+		double y = -stick.getY()*(invertedControls ? -1 : 1);
+		double twist = stick.getTwist();
+
+		if(x < xThreshold*throttle && x > -xThreshold*throttle)
 			x = 0;
 		else
-			x -= xThreshold*sensitivity*Math.signum(x);
+			x -= xThreshold*throttle*Math.signum(x);
 		if(y < yThreshold && y > -yThreshold) y = 0;
 
 		Log.debug("Driving", String.format("Loop x: %s y: %s", x, y));
-		Log.debug("Driving", String.format("Loop joystick x: %s y: %s twist: %s", stick.getX(), stick.getY(), stick.getTwist()));
 		
 		if(stick.getRawButton(2)) {
 			if(!calibrated) {
@@ -74,46 +80,24 @@ public class Driving {
 				gyro.reset();
 			}
 			if(distance.getDistance() > 300)
-				driver.driveXY(-gyro.getAngle()/45*(invertedControls ? -1 : 1), sensitivity*(invertedControls ? -1 : 1)); //Tilfaeldig koefficient der virker :D
+				driver.driveXY(-gyro.getAngle()/45*(invertedControls ? -1 : 1), throttle*(invertedControls ? -1 : 1)); //Tilfaeldig koefficient der virker :D
 			return;
 		} else {
 			calibrated = false;
 		}
-		
-		//Drej hhv 90 grader mod uret, 90 grader med uret og 180 grader ved tryk paa en knap:
-		//Maaske skal prioriteterne byttes om, men foerst skal det bare tjekkes om det virker...
-		if(stick.getRawButton(3)) {
-		    Log.debug("Driving", "Starting autonomous turn");
-			if(runningAutonomous == null) {
-				runningAutonomous = new Turn(-90, gyro, driver);
-				runningAutonomous.start();
-			}
-		} else if(stick.getRawButton(4)) {
-			if(runningAutonomous == null) {
-				runningAutonomous = new Turn(90, gyro, driver);
-				runningAutonomous.start();
-			}
-		} else if(stick.getRawButton(5)) {
-			if(runningAutonomous == null) {
-				runningAutonomous = new Turn(-180, gyro, driver);
-				runningAutonomous.start();
-			}
-		} else if(stick.getRawButton(6)) {
-			if(runningAutonomous == null) {
-				runningAutonomous = new Turn(180, gyro, driver);
-				runningAutonomous.start();
-			}
-		}
-		
-		if(runningAutonomous != null && runningAutonomous.isRunning()) {
+
+		handleButtonsForAutoTurn();
+
+		/*if(runningAutonomous != null && runningAutonomous.isRunning()) {
 			runningAutonomous.loop();
 			return;
 		}
-		
+
 		if(runningAutonomous != null && !runningAutonomous.isRunning())
 			runningAutonomous = null;
+		*/
 
-		handleStickDriving(x,y, twist, sensitivity);
+		handleStickDriving(x, y, twist, throttle);
 	}
 
 	private void handleStickDriving(double x, double y, double twist, double sensitivity) {
@@ -126,6 +110,42 @@ public class Driving {
 		} else {
 			Log.debug("Driving", "Driving using tankTurn");
 			driver.tankTurn(twist*sensitivity);
+		}
+	}
+
+	private void handleButtonsForAutoTurn() {
+		double degrees = 0;
+		if(stick.getRawButton(3)) degrees = - 90;
+		if(stick.getRawButton(4)) degrees = + 90;
+		if(stick.getRawButton(5)) degrees = -180;
+		if(stick.getRawButton(6)) degrees = +180;
+
+		if(degrees != 0 && (runningAutonomous == null || !runningAutonomous.isRunning())) {
+			runningAutonomous = new Turn(degrees, gyro, driver);
+			runningAutonomous.start();
+			//BackgroundTaskHandler.handleBackgroundTask(runningAutonomous);
+		}
+
+		if(stick.getRawButton(3)) {
+			if(runningAutonomous == null || !runningAutonomous.isRunning()) {
+				runningAutonomous = new Turn(-90, gyro, driver);
+				runningAutonomous.start();
+			}
+		} else if(stick.getRawButton(4)) {
+			if(runningAutonomous == null || !runningAutonomous.isRunning()) {
+				runningAutonomous = new Turn(90, gyro, driver);
+				runningAutonomous.start();
+			}
+		} else if(stick.getRawButton(5)) {
+			if(runningAutonomous == null || !runningAutonomous.isRunning()) {
+				runningAutonomous = new Turn(-180, gyro, driver);
+				runningAutonomous.start();
+			}
+		} else if(stick.getRawButton(6)) {
+			if(runningAutonomous == null || !runningAutonomous.isRunning()) {
+				runningAutonomous = new Turn(180, gyro, driver);
+				runningAutonomous.start();
+			}
 		}
 	}
 
