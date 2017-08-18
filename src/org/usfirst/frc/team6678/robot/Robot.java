@@ -115,20 +115,25 @@ public class Robot extends IterativeRobot {
 		} else {
 			actuator.set(Value.kReverse);
 		}
-		
-		
+
+		/*
+		The device shuts down outputs when the voltage goes below 6.8V.
+		Device blackout should happen at about 4.5V, but might happen earlier.
+		See https://wpilib.screenstepslive.com/s/4485/m/24166/l/289498 for more details.
+		7.5V is chosen to have a relatively large safety margin, but it could be lowered a bit.
+		*/
 		double voltage = DriverStation.getInstance().getBatteryVoltage();
 		Log.debug("Voltage", voltage + " V");
-		if(voltage >= 7.5 && !stick.getRawButton(12)) { //Needs testing!
+		if(voltage >= 7.5) {
 			driving.loop();
 		} else {
 			driving.driver.stopMotors();
 			Log.warn("Voltage", "Voltage is critically low! " + voltage + "V");
 		}
 		
-		if(!stick.getRawButton(12)) {
+		/*if(!stick.getRawButton(12)) {
 			driving.loop();
-		}
+		}*/
 	}
 
 	/**
@@ -158,7 +163,7 @@ public class Robot extends IterativeRobot {
 	 */
 	private void setupServer(int port) {
 		new Thread(() -> {
-			try(
+			try(	//Auto-closing objects in the new try-catch-statement
 	                ServerSocket serverSocket = new ServerSocket(port);
 	                Socket clientSocket = serverSocket.accept();
 	                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
