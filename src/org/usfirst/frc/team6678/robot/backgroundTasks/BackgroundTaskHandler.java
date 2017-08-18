@@ -57,7 +57,8 @@ public class BackgroundTaskHandler {
 	 */
 	public synchronized static void handle() {
 		for(BackgroundTask bt : tasks)
-			bt.loop();
+			if(bt != null)
+				bt.loop();
 	}
 	
 }
