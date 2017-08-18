@@ -123,10 +123,9 @@ public class Driving {
 		if(degrees != 0 && (runningAutonomous == null || !runningAutonomous.isRunning())) {
 			runningAutonomous = new Turn(degrees, gyro, driver);
 			runningAutonomous.start();
-			//BackgroundTaskHandler.handleBackgroundTask(runningAutonomous);
 		}
 
-		if(stick.getRawButton(3)) {
+		/*if(stick.getRawButton(3)) {
 			if(runningAutonomous == null || !runningAutonomous.isRunning()) {
 				runningAutonomous = new Turn(-90, gyro, driver);
 				runningAutonomous.start();
@@ -146,7 +145,7 @@ public class Driving {
 				runningAutonomous = new Turn(180, gyro, driver);
 				runningAutonomous.start();
 			}
-		}
+		}*/
 	}
 
 }
