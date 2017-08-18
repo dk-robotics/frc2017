@@ -1,6 +1,7 @@
 package org.usfirst.frc.team6678.robot;
 
 import org.usfirst.frc.team6678.robot.autonomous.Autonomous;
+import org.usfirst.frc.team6678.robot.autonomous.StraightDrive;
 import org.usfirst.frc.team6678.robot.autonomous.Turn;
 import org.usfirst.frc.team6678.robot.backgroundTasks.BackgroundTaskHandler;
 import org.usfirst.frc.team6678.robot.backgroundTasks.ButtonSwitchState;
@@ -20,7 +21,8 @@ public class Driving {
 	private Joystick stick;
 	private ButtonSwitchState invertSwitchButton;
 	private UltraSonicDistanceSensor distance = new UltraSonicDistanceSensor();
-	Autonomous runningAutonomous = null;
+	private Autonomous runningAutonomous = null;
+	private StraightDrive straightDriver;
 	
 	final double yThreshold = 0.05;
 	final double xThreshold = 0.15;
@@ -38,6 +40,8 @@ public class Driving {
 		BackgroundTaskHandler.handleBackgroundTask(invertSwitchButton);
 		BackgroundTaskHandler.handleBackgroundTask(distance);
 		BackgroundTaskHandler.handleBackgroundTask(runningAutonomous);
+		straightDriver = new StraightDrive(0, gyro, driver, false);
+		BackgroundTaskHandler.handleBackgroundTask(straightDriver);
 
 		gyro.calibrate(); //Dette tager maaske en 'evighed' og delay'er opstarten af koden?
 
@@ -49,7 +53,7 @@ public class Driving {
 	 * Bliver kaldt fra {@link Robot#teleopPeriodic()}
 	 */
 	public void loop () {
-		//Stop runningAutonomous (ie Turn) and stop movement
+		//Stop runningAutonomous (eg Turn or StraightDrive) and stop movement
         if(stick.getRawButton(12)) {
             Log.info("Driving", "Annullerer autonomous (herunder fx turn)");
             runningAutonomous.stop();
@@ -73,7 +77,7 @@ public class Driving {
 
 		Log.debug("Driving", String.format("Loop x: %s y: %s", x, y));
 		
-		if(stick.getRawButton(2)) {
+		/*if(stick.getRawButton(2)) {
 			if(!calibrated) {
 				driver.alignAccelerationValues();
 				calibrated = true;
@@ -84,6 +88,15 @@ public class Driving {
 			return;
 		} else {
 			calibrated = false;
+		}*/
+
+		if(stick.getRawButton(2) && !straightDriver.isRunning())
+			straightDriver.start();
+		else if(!stick.getRawButton(2) && straightDriver.isRunning())
+			straightDriver.stop();
+		if(straightDriver.isRunning()) {
+			straightDriver.setInvertedControls(invertedControls);
+			straightDriver.setThrottle(throttle);
 		}
 
 		handleButtonsForAutoTurn();
@@ -96,6 +109,9 @@ public class Driving {
 		if(runningAutonomous != null && !runningAutonomous.isRunning())
 			runningAutonomous = null;
 		*/
+
+		if(runningAutonomous != null && runningAutonomous.isRunning())
+			return; //Prevent the autonomous action from being overruled
 
 		handleStickDriving(x, y, twist, throttle);
 	}
