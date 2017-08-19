@@ -67,8 +67,19 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotPeriodic() {
 		BackgroundTaskHandler.handle();
+		if(this.m_ds.isDisabled()) {
+			System.out.println("This robot is disabled. This is written from robotPeriodic!");
+			System.out.println("Is button 11 pressed: " + stick.getRawButton(11));
+		} else {
+			System.out.println("This robot is enabled. This is written from robotPeriodic!");
+			System.out.println("Is button 11 pressed: " + stick.getRawButton(11));
+		}
 	}
-	
+
+	public boolean isDisabled() {
+		return super.isDisabled();
+	}
+
 	/**
 	 * This function is run once each time the robot enters autonomous mode
 	 */
