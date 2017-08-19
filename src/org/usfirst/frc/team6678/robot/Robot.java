@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.usfirst.frc.team6678.robot.autonomous.AutonomousHandler;
 import org.usfirst.frc.team6678.robot.backgroundTasks.BackgroundTaskHandler;
+import org.usfirst.frc.team6678.robot.backgroundTasks.ButtonSwitchState;
 import org.usfirst.frc.team6678.robot.backgroundTasks.UltraSonicDistanceSensor;
 
 /**
@@ -76,8 +77,42 @@ public class Robot extends IterativeRobot {
 		}
 	}
 
+	ButtonSwitchState overruleEnabling = new ButtonSwitchState(stick, 7);
+	ButtonSwitchState shouldEnable = new ButtonSwitchState(stick, 9);
+
+	/**
+	 * This is super cheating, really a hack, but it actually should work!
+	 * {@link IterativeRobot} continuously tests {@link IterativeRobot#isDisabled()},
+	 * which checks internally whether the robot has the isEnabled flag set.
+	 * But if we overwrite the method here, it will override the output from
+	 * the superclass as well! This implies that we can programmatically determine
+	 * whether the robot shall be enabled or not!
+	 * This will most likely _not_ be allowed in competition context, but it might be
+	 * a really useful hack while developing and testing the robot!
+	 * Note that the {@link IterativeRobot} runs the following code when the robot is/should be in teleop mode:
+	 * {@code
+		if(!this.m_teleopInitialized) {
+			LiveWindow.setEnabled(false);
+			this.teleopInit();
+			this.m_teleopInitialized = true;
+			this.m_testInitialized = false;
+			this.m_autonomousInitialized = false;
+			this.m_disabledInitialized = false;
+		}
+
+		HAL.observeUserProgramTeleop();
+		this.teleopPeriodic();}
+	 * Therefore, this method should call all the same, to ensure maximum compatibility.
+	 * {@code LiveWindow.setEnabled(true)} might set the indicator in the Driver Station windows application
+	 * but this still needs to be tested.
+	 * @return whether the robot is (alternativly; should be) disabled.
+	 */
 	public boolean isDisabled() {
-		return super.isDisabled();
+		if(overruleEnabling.getState()) {
+			return !shouldEnable.getState();
+		} else {
+			return super.isDisabled();
+		}
 	}
 
 	/**
