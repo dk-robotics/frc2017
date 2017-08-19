@@ -20,7 +20,7 @@ public class Driving {
 	private ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 	private Joystick stick;
 	private ButtonSwitchState invertSwitchButton;
-	private UltraSonicDistanceSensor distance = new UltraSonicDistanceSensor();
+	private UltraSonicDistanceSensor frontDistance = new UltraSonicDistanceSensor();
 	private Autonomous runningAutonomous = null;
 	private StraightDrive straightDriver;
 	
@@ -36,7 +36,7 @@ public class Driving {
 
 		invertSwitchButton = new ButtonSwitchState(stick, 8);
 		BackgroundTaskHandler.handleBackgroundTask(invertSwitchButton);
-		BackgroundTaskHandler.handleBackgroundTask(distance);
+		BackgroundTaskHandler.handleBackgroundTask(frontDistance);
 		BackgroundTaskHandler.handleBackgroundTask(runningAutonomous);
 		straightDriver = new StraightDrive(0, gyro, driver, false);
 		BackgroundTaskHandler.handleBackgroundTask(straightDriver);
@@ -81,7 +81,7 @@ public class Driving {
 				calibrated = true;
 				gyro.reset();
 			}
-			if(distance.getDistance() > 300)
+			if(frontDistance.getDistance() > 300)
 				driver.driveXY(-gyro.getAngle()/45*(invertedControls ? -1 : 1), throttle*(invertedControls ? -1 : 1)); //Tilfaeldig koefficient der virker :D
 			return;
 		} else {
@@ -118,8 +118,10 @@ public class Driving {
 		if(Math.abs(twist) < Math.abs(x)*2 || Math.abs(twist) < Math.abs(y)*1.5) {
 			Log.debug("Driving", "Driving using driveXY");
 			double xScalingCoefficient = 1-0.75*sensitivity*x*sensitivity*x; //1-0.75*(x*sensitivity)^2)
-			if(distance.getDistance() > 300)
-				driver.driveXY(x*sensitivity*xScalingCoefficient/*-offset*/, y*sensitivity);
+			if(frontDistance.getDistance() > 300 || y < 0)
+				driver.driveXY(x*sensitivity*xScalingCoefficient, y*sensitivity);
+			else
+				driver.driveXY(0, 0);
 		} else {
 			Log.debug("Driving", "Driving using tankTurn");
 			driver.tankTurn(twist*sensitivity);
