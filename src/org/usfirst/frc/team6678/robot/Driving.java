@@ -17,18 +17,16 @@ import edu.wpi.first.wpilibj.Joystick;
 public class Driving {
 
 	CustomMotorDrive driver = new CustomMotorDrive(0, 1, 2, 3);
-	ADXRS450_Gyro gyro = new ADXRS450_Gyro();
+	private ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 	private Joystick stick;
 	private ButtonSwitchState invertSwitchButton;
 	private UltraSonicDistanceSensor distance = new UltraSonicDistanceSensor();
 	private Autonomous runningAutonomous = null;
 	private StraightDrive straightDriver;
 	
-	final double yThreshold = 0.05;
-	final double xThreshold = 0.15;
-	
-	boolean calibrated = false;
-	
+	private final double yThreshold = 0.05;
+	private final double xThreshold = 0.15;
+
 	Driving(Joystick joystick){
 		Log.message("Driving", "Initializing");
 		long initStartTime = System.currentTimeMillis();
@@ -120,7 +118,6 @@ public class Driving {
 		if(Math.abs(twist) < Math.abs(x)*2 || Math.abs(twist) < Math.abs(y)*1.5) {
 			Log.debug("Driving", "Driving using driveXY");
 			double xScalingCoefficient = 1-0.75*sensitivity*x*sensitivity*x; //1-0.75*(x*sensitivity)^2)
-			double offset = xThreshold*sensitivity*Math.signum(x);
 			if(distance.getDistance() > 300)
 				driver.driveXY(x*sensitivity*xScalingCoefficient/*-offset*/, y*sensitivity);
 		} else {
