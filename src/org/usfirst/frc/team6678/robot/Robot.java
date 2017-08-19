@@ -30,8 +30,6 @@ import org.usfirst.frc.team6678.robot.backgroundTasks.UltraSonicDistanceSensor;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	//RobotDrive myRobot = new RobotDrive(0, 1);
-	
 	private Timer timer = new Timer();
 	private Joystick stick = new Joystick(0);
 	private Driving driving = new Driving(stick);
@@ -105,14 +103,13 @@ public class Robot extends IterativeRobot {
 	 * Therefore, this method should call all the same, to ensure maximum compatibility.
 	 * {@code LiveWindow.setEnabled(true)} might set the indicator in the Driver Station windows application
 	 * but this still needs to be tested.
-	 * @return whether the robot is (alternativly; should be) disabled.
+	 * @return whether the robot is (alternatively; should be) disabled.
 	 */
 	public boolean isDisabled() {
-		if(overruleEnabling.getState()) {
+		if(overruleEnabling.getState())
 			return !shouldEnable.getState();
-		} else {
+		else
 			return super.isDisabled();
-		}
 	}
 
 	/**
@@ -127,18 +124,12 @@ public class Robot extends IterativeRobot {
 		Log.info("Robot", "Autonomous Init finished");
 	}
 
-	
-	//SerialPort sp = new SerialPort(9600, Port.kOnboard, 8, Parity.kNone, StopBits.kOne);
-	UltraSonicDistanceSensor dist = new UltraSonicDistanceSensor();
 	/**
 	 * This function is called periodically during autonomous
 	 */
 	@Override
 	public void autonomousPeriodic() { //Skal laves fuldkommen om fra bunden...
 		autonomous.loop();
-		
-		//System.out.println("Serial input: " + sp.readString());
-		dist.loop();
 	}
 
 	/**
@@ -163,10 +154,10 @@ public class Robot extends IterativeRobot {
 		}
 
 		/*
-		The device shuts down outputs when the voltage goes below 6.8V.
-		Device blackout should happen at about 4.5V, but might happen earlier.
-		See https://wpilib.screenstepslive.com/s/4485/m/24166/l/289498 for more details.
-		7.5V is chosen to have a relatively large safety margin, but it could be lowered a bit.
+		* The device shuts down outputs when the voltage goes below 6.8V.
+		* Device blackout should happen at about 4.5V, but might happen earlier.
+		* See https://wpilib.screenstepslive.com/s/4485/m/24166/l/289498 for more details.
+		* 7.5V is chosen to have a relatively large safety margin, but it could be lowered a bit.
 		*/
 		double voltage = DriverStation.getInstance().getBatteryVoltage();
 		Log.debug("Voltage", voltage + " V");
@@ -176,10 +167,6 @@ public class Robot extends IterativeRobot {
 			driving.driver.stopMotors();
 			Log.warn("Voltage", "Voltage is critically low! " + voltage + "V");
 		}
-		
-		/*if(!stick.getRawButton(12)) {
-			driving.loop();
-		}*/
 	}
 
 	/**
