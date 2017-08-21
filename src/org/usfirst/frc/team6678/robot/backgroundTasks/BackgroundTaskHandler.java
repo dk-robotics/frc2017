@@ -60,11 +60,8 @@ public class BackgroundTaskHandler {
 	 */
 	public synchronized static void handle() {
 		for(BackgroundTask bt : tasks) {
-			if(bt != null) {
+			if(bt != null)
 				bt.loop();
-				if(bt instanceof Turn)
-					Log.error("BackTask", "Handling " + bt.getClass().toString());
-			}
 		}
 	}
 	
