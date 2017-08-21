@@ -7,7 +7,7 @@ package org.usfirst.frc.team6678.robot;
 public class Log {
 	
     public enum Type {
-        DEBUG(false), INFO(false), MSG(false), WARN(true), ERROR(true);
+        DEBUG(true), INFO(true), MSG(true), WARN(true), ERROR(true);
 
         private boolean enabled;
 
