@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.usfirst.frc.team6678.robot.autonomous.AutonomousHandler;
 import org.usfirst.frc.team6678.robot.backgroundTasks.BackgroundTaskHandler;
+import org.usfirst.frc.team6678.robot.backgroundTasks.ButtonSwitchState;
 import org.usfirst.frc.team6678.robot.backgroundTasks.UltraSonicDistanceSensor;
 
 /**
@@ -29,8 +30,6 @@ import org.usfirst.frc.team6678.robot.backgroundTasks.UltraSonicDistanceSensor;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	//RobotDrive myRobot = new RobotDrive(0, 1);
-	
 	private Timer timer = new Timer();
 	private Joystick stick = new Joystick(0);
 	private Driving driving = new Driving(stick);
@@ -68,7 +67,7 @@ public class Robot extends IterativeRobot {
 	public void robotPeriodic() {
 		BackgroundTaskHandler.handle();
 	}
-	
+
 	/**
 	 * This function is run once each time the robot enters autonomous mode
 	 */
@@ -81,18 +80,12 @@ public class Robot extends IterativeRobot {
 		Log.info("Robot", "Autonomous Init finished");
 	}
 
-	
-	//SerialPort sp = new SerialPort(9600, Port.kOnboard, 8, Parity.kNone, StopBits.kOne);
-	UltraSonicDistanceSensor dist = new UltraSonicDistanceSensor();
 	/**
 	 * This function is called periodically during autonomous
 	 */
 	@Override
 	public void autonomousPeriodic() { //Skal laves fuldkommen om fra bunden...
 		autonomous.loop();
-		
-		//System.out.println("Serial input: " + sp.readString());
-		dist.loop();
 	}
 
 	/**
@@ -115,19 +108,20 @@ public class Robot extends IterativeRobot {
 		} else {
 			actuator.set(Value.kReverse);
 		}
-		
-		
+
+		/*
+		* The device shuts down outputs when the voltage goes below 6.8V.
+		* Device blackout should happen at about 4.5V, but might happen earlier.
+		* See https://wpilib.screenstepslive.com/s/4485/m/24166/l/289498 for more details.
+		* 7.5V is chosen to have a relatively large safety margin, but it could be lowered a bit.
+		*/
 		double voltage = DriverStation.getInstance().getBatteryVoltage();
 		Log.debug("Voltage", voltage + " V");
-		if(voltage >= 7.5 && !stick.getRawButton(12)) { //Needs testing!
+		if(voltage >= 7.5) {
 			driving.loop();
 		} else {
 			driving.driver.stopMotors();
 			Log.warn("Voltage", "Voltage is critically low! " + voltage + "V");
-		}
-		
-		if(!stick.getRawButton(12)) {
-			driving.loop();
 		}
 	}
 
@@ -158,7 +152,7 @@ public class Robot extends IterativeRobot {
 	 */
 	private void setupServer(int port) {
 		new Thread(() -> {
-			try(
+			try(	//Auto-closing objects in the new try-catch-statement
 	                ServerSocket serverSocket = new ServerSocket(port);
 	                Socket clientSocket = serverSocket.accept();
 	                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);

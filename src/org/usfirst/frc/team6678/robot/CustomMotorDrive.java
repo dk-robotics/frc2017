@@ -63,6 +63,7 @@ public class CustomMotorDrive {
 		Log.message("CustomMotorDrive", "Stop motors");
 		acceleratedLeftMotor = 0;
 		acceleratedRightMotor = 0;
+		lastAccelerationTimestamp = -1;
 		leftMotor0.set(0);
 		leftMotor1.set(0);
 		rightMotor0.set(0);

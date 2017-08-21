@@ -10,26 +10,31 @@ import org.usfirst.frc.team6678.robot.Log;
  */
 public class Turn implements Autonomous {
 
-    private boolean running;
-    private double degreesToTurn;
+    private boolean running = false;
+    private double degreesToTurn = 0;
     private CustomMotorDrive customMotorDrive;
     private ADXRS450_Gyro gyro;
+
+    public Turn(ADXRS450_Gyro gyro, CustomMotorDrive customMotorDrive) {
+        Log.message("AutonomousTurn", "Initializing new Turn");
+        this.gyro = gyro;
+        this.customMotorDrive = customMotorDrive;
+    }
 
     /**
      *
      * @param degrees Grader som robotten skal dreje, positivt drejer til hoejre
      */
     public Turn(double degrees, ADXRS450_Gyro gyro, CustomMotorDrive customMotorDrive) {
-        Log.message("AutonomousTurn", String.format("Initializing new Turn with %s degrees", degrees));
-        this.degreesToTurn = degrees;
-        this.gyro = gyro;
-        this.customMotorDrive = customMotorDrive;
+        this(gyro, customMotorDrive);
+        setDegreesToTurn(degrees);
     }
 
     @Override
     public void start() {
         Log.info("AutonomousTurn", "Starting turn");
         gyro.reset();
+        customMotorDrive.alignAccelerationValues();
         running = true;
     }
 
@@ -51,8 +56,19 @@ public class Turn implements Autonomous {
         if(Math.abs(gyro.getAngle()) > Math.abs(degreesToTurn)) {
             customMotorDrive.stopMotors();
             stop();
+            Log.info("Turn", "Turning " + degreesToTurn + " degrees is completed!");
         } else {
-            customMotorDrive.tankTurn(Math.signum(degreesToTurn)/2);
+            customMotorDrive.tankTurn(Math.signum(degreesToTurn)/5);
+            Log.info("Turn", "Turning. " + (degreesToTurn-gyro.getAngle()) + " degrees remaining");
         }
     }
+
+    public double getDegreesToTurn() {
+        return degreesToTurn;
+    }
+
+    public void setDegreesToTurn(double degreesToTurn) {
+        this.degreesToTurn = degreesToTurn;
+    }
+
 }
