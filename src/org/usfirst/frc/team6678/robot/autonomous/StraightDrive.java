@@ -48,7 +48,8 @@ public class StraightDrive implements Autonomous {
     @Override
     public void loop() {
         if(!running) return;
-        customMotorDrive.driveXY(-gyro.getAngle()/45*(invertedControls ? -1 : 1), throttle*(invertedControls ? -1 : 1));
+        Log.debug("Straight", "looping with throttle: " + throttle);
+        customMotorDrive.driveXY(-gyro.getAngle()/45*(invertedControls ? -1 : 1), throttle);
     }
 
     public double getThrottle() {
