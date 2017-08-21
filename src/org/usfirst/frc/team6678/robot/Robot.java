@@ -66,50 +66,13 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotPeriodic() {
 		BackgroundTaskHandler.handle();
-		if(this.m_ds.isDisabled()) {
+		/*if(this.m_ds.isDisabled()) {
 			System.out.println("This robot is disabled. This is written from robotPeriodic!");
 			System.out.println("Is button 11 pressed: " + stick.getRawButton(11));
 		} else {
 			System.out.println("This robot is enabled. This is written from robotPeriodic!");
 			System.out.println("Is button 11 pressed: " + stick.getRawButton(11));
-		}
-	}
-
-	ButtonSwitchState overruleEnabling = new ButtonSwitchState(stick, 7);
-	ButtonSwitchState shouldEnable = new ButtonSwitchState(stick, 9);
-
-	/**
-	 * This is super cheating, really a hack, but it actually should work!
-	 * {@link IterativeRobot} continuously tests {@link IterativeRobot#isDisabled()},
-	 * which checks internally whether the robot has the isEnabled flag set.
-	 * But if we overwrite the method here, it will override the output from
-	 * the superclass as well! This implies that we can programmatically determine
-	 * whether the robot shall be enabled or not!
-	 * This will most likely _not_ be allowed in competition context, but it might be
-	 * a really useful hack while developing and testing the robot!
-	 * Note that the {@link IterativeRobot} runs the following code when the robot is/should be in teleop mode:
-	 * {@code
-		if(!this.m_teleopInitialized) {
-			LiveWindow.setEnabled(false);
-			this.teleopInit();
-			this.m_teleopInitialized = true;
-			this.m_testInitialized = false;
-			this.m_autonomousInitialized = false;
-			this.m_disabledInitialized = false;
-		}
-
-		HAL.observeUserProgramTeleop();
-		this.teleopPeriodic();}
-	 * Therefore, this method should call all the same, to ensure maximum compatibility.
-	 * {@code LiveWindow.setEnabled(true)} might set the indicator in the Driver Station windows application
-	 * but this still needs to be tested.
-	 * @return whether the robot is (alternatively; should be) disabled.
-	 */
-	public boolean isDisabled() {
-		if(overruleEnabling.getState())
-			return !shouldEnable.getState();
-		else
-			return super.isDisabled();
+		}*/
 	}
 
 	/**

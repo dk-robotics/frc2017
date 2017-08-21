@@ -1,8 +1,11 @@
 package org.usfirst.frc.team6678.robot.backgroundTasks;
 
+import org.usfirst.frc.team6678.robot.Log;
 import org.usfirst.frc.team6678.robot.Robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import org.usfirst.frc.team6678.robot.autonomous.Autonomous;
+import org.usfirst.frc.team6678.robot.autonomous.Turn;
 
 import java.util.ArrayList;
 
@@ -56,9 +59,13 @@ public class BackgroundTaskHandler {
 	 * and calls each of their respective {@link BackgroundTask#loop()} methods.
 	 */
 	public synchronized static void handle() {
-		for(BackgroundTask bt : tasks)
-			if(bt != null)
+		for(BackgroundTask bt : tasks) {
+			if(bt != null) {
 				bt.loop();
+				if(bt instanceof Turn)
+					Log.error("BackTask", "Handling " + bt.getClass().toString());
+			}
+		}
 	}
 	
 }

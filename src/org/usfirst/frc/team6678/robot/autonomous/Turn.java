@@ -48,11 +48,14 @@ public class Turn implements Autonomous {
     public void loop() {
         if(!running) return;
 
+        Log.error("Turn", "From the loop");
         if(Math.abs(gyro.getAngle()) > Math.abs(degreesToTurn)) {
             customMotorDrive.stopMotors();
             stop();
+            Log.error("Turn", "Stopping");
         } else {
             customMotorDrive.tankTurn(Math.signum(degreesToTurn)/2);
+            Log.error("Turn", "Turning...");
         }
     }
 }

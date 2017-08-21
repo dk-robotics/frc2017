@@ -137,6 +137,7 @@ public class Driving {
 
 		if(degrees != 0 && (runningAutonomous == null || !runningAutonomous.isRunning())) {
 			runningAutonomous = new Turn(degrees, gyro, driver);
+			Log.error("Driving", "Turning + " + degrees + "degrees");
 			runningAutonomous.start();
 		}
 
