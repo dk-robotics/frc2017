@@ -89,7 +89,7 @@ public class Driving {
 	}
 
 	private boolean isDistanceOK(double throttle) {
-		return frontDistance.getDistance() > minAllowedDistance*(throttle+0.5);
+		return frontDistance.getDistance() > minAllowedDistance*(throttle*throttle+0.5); //E_kin = m v^2
 	}
 
 	private void handleButtonsForAutoTurn() {
